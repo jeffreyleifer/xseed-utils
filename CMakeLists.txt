@@ -1,4 +1,4 @@
-PROJECT(libxseed)
+PROJECT(xseed-utils)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 IF (UNIX)
@@ -14,8 +14,6 @@ vs static")
 # XSEED_BUILD_SHARED
 OPTION(BUILD_SHARED_LIBS "Build the shared library" ${XSEED_BUILD_SHARED})
 
-#build thirdparty libraries
-ADD_SUBDIRECTORY(libsrc)
 
 #build sources
 ADD_SUBDIRECTORY(src)
