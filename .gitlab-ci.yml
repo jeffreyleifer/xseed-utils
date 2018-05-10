@@ -1,0 +1,133 @@
+stages:
+    - build
+
+Build_Centos_Latest:
+    image: centos:latest
+    tags: 
+        - linux
+    before_script:
+        - yum groupinstall -y "Development Tools"
+        - yum install -y cmake
+    script:
+        - mkdir build
+        - pushd build
+        - cmake ..
+        - make
+    stage: build
+
+Build_Centos_6:
+    image: centos:6
+    tags:
+        - linux
+    before_script:
+        - yum groupinstall -y "Development Tools"
+        - yum install -y cmake
+    script:
+        - mkdir build
+        - pushd build
+        - cmake ..
+        - make
+    stage: build
+
+Build_Fedora_Latest:
+    image: fedora:latest
+    tags:
+        - linux
+    before_script:
+        - yum groupinstall -y "Development Tools"
+        - yum install -y gcc-c++ cmake
+    script:
+        - mkdir build
+        - pushd build
+        - cmake ..
+        - make
+    stage: build
+
+Build_Debian_Latest:
+    image: debian:latest
+    tags:
+        - linux
+    before_script:
+        - apt-get update
+        - apt-get install -y build-essential
+        - apt-get install -y cmake git
+    script:
+        - mkdir build
+        - pushd build
+        - cmake ..
+        - make
+    stage: build
+
+Build_Debian_8:
+    image: debian:8
+    tags:
+        - linux
+    before_script:
+        - apt-get update
+        - apt-get install -y build-essential
+        - apt-get install -y cmake git
+    script:
+        - mkdir build
+        - pushd build
+        - cmake ..
+        - make
+    stage: build
+
+Build_Ubuntu_Latest:
+    image: ubuntu:latest
+    tags:
+        - linux
+    before_script:
+        - apt-get update
+        - apt-get install -y build-essential
+        - apt-get install -y cmake git
+    script:
+        - mkdir build
+        - pushd build
+        - cmake ..
+        - make
+    stage: build
+
+Build_Ubuntu_16.04:
+    image: ubuntu:16.04
+    tags:
+        - linux
+    before_script:
+        - apt-get update
+        - apt-get install -y build-essential
+        - apt-get install -y cmake git
+    script:
+        - mkdir build
+        - pushd build
+        - cmake ..
+        - make
+    stage: build
+
+Build_Ubuntu_14.04:
+    image: ubuntu:14.04
+    tags:
+        - linux
+    before_script:
+        - apt-get update
+        - apt-get install -y build-essential
+        - apt-get install -y cmake git
+    script:
+        - mkdir build
+        - pushd build
+        - cmake ..
+        - make
+    stage: build
+
+Build_Windows_10:
+    tags:
+        - windows10
+    before_script:
+        - call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\VsDevCmd.bat"
+    script:
+        - mkdir build
+        - cd build
+        - cmake ..
+        - msbuild libxseed.sln
+    after_script:
+        - rm build
+    stage: build
