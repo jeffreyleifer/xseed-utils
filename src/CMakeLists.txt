@@ -1,0 +1,4 @@
+ADD_SUBDIRECTORY(mseed2xseed)
+ADD_SUBDIRECTORY(xseed2json)
+ADD_SUBDIRECTORY(xseed2text)
+ADD_SUBDIRECTORY(xseedValidator)
