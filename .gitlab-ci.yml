@@ -1,5 +1,10 @@
+variables:
+  JEKYLL_ENV: production
+  
 stages:
     - build
+    - test
+    - deploy
 
 Build_Centos_Latest:
     image: centos:latest
@@ -131,3 +136,32 @@ Build_Windows_10:
     after_script:
         - rm build
     stage: build
+
+test_docs:
+  image: ruby:2.3
+  before_script:
+  - pushd jekyll
+  - bundle install
+  stage: test
+  script:
+  - bundle exec jekyll build -d test
+  artifacts:
+    paths:
+    - test
+  except:
+  - master
+
+pages:
+  image: ruby:2.3
+  before_script:
+  - mkdir public
+  - pushd jekyll
+  - bundle install
+  stage: deploy
+  script:
+  - bundle exec jekyll build -d ../public
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
