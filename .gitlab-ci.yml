@@ -3,6 +3,8 @@ variables:
   
 stages:
     - build
+    - test
+    - deploy
 
 Build_Centos_Latest:
     image: centos:latest
