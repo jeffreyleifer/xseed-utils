@@ -57,3 +57,6 @@ menu:
 client:
     name: IRIS
     url: "https://iris.edu"
+
+category_order:
+    - 'Installation'
