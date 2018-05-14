@@ -155,7 +155,7 @@ pages:
   image: ruby:2.3
   before_script:
   - mkdir public
-  - pushd jekyll
+  - pushd docs
   - bundle install
   stage: deploy
   script:
