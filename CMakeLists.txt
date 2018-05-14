@@ -4,6 +4,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 IF (UNIX)
     INCLUDE(GNUInstallDirs)
 ENDIF(UNIX)
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 
 #TODO: check for thirdparty libraries (tinycbor)
 
