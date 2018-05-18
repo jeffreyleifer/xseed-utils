@@ -1,0 +1,1 @@
+#cmakedefine MSEED_VERSION @MSEED_VERSION@

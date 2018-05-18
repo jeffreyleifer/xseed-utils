@@ -15,7 +15,11 @@ vs static")
 # XSEED_BUILD_SHARED
 OPTION(BUILD_SHARED_LIBS "Build the shared library" ${XSEED_BUILD_SHARED})
 
+FIND_PACKAGE(MSEED 3.0)
 
+ADD_SUBDIRECTORY(libsrc)
+
+INCLUDE(AddSources)
 #build sources
 ADD_SUBDIRECTORY(src)
 
