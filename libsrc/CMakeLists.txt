@@ -14,7 +14,7 @@ ENDIF(MSEED_CORRECT_VERSION_FOUND)
 
 IF(MSEED_BUILD)
     IF (MSVC)
-        SET(MAKE_CMD "nmake \f Makefile.win")
+        SET(MAKE_CMD nmake \f Makefile.win)
         SET(mseed_lib mseed.lib)
     ELSE (MSVC)
         SET(MAKE_CMD "make")
