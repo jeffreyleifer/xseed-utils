@@ -43,7 +43,7 @@ plugins:
 collections:
     documentation:
         output: true
-        permalink: /:collection/:path
+        permalink: /:collection/:path/
 # End
         #
 menu:

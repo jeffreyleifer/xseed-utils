@@ -10,4 +10,5 @@
 void display_help (char *program_name, char *message, struct option long_opts, char **opt_descriptions)
 {
     printf("Usage: %s\n", program_name);
+    printf("\n%s\n", message);
 }
