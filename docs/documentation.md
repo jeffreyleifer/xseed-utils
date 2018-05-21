@@ -6,4 +6,4 @@ permalink: /documentation/
 
 ## Welcome to the {{ site.title }} Documentation!
 
-This documentatin is to find out how to use the programs and stuff.
+This documentation is to find out how to use the programs and stuff.
