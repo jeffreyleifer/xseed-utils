@@ -17,7 +17,7 @@ IF(MSEED_BUILD)
         SET(MAKE_CMD nmake /F Makefile.win)
         SET(mseed_lib mseed.lib)
     ELSE (MSVC)
-        SET(MAKE_CMD "make")
+        SET(MAKE_CMD CFLAGS=\"-std-c99\" make)
         SET(mseed_lib libmseed.a)
     ENDIF (MSVC)
     ExternalProject_Add(MSEED_LIBRARY 
