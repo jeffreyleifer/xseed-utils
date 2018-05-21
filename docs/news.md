@@ -1,3 +1,4 @@
 ---
 layout: news
+permalink: /news/
 ---
