@@ -140,7 +140,7 @@ Build_Windows_10:
 test_docs:
   image: ruby:2.3
   before_script:
-  - pushd jekyll
+  - pushd docs
   - bundle install
   stage: test
   script:
