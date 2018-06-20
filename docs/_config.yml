@@ -60,3 +60,4 @@ client:
 
 category_order:
     - 'Installation'
+    - 'Validator'
