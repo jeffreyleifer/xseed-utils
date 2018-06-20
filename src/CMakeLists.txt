@@ -5,7 +5,7 @@ ADD_SUBDIRECTORY(xseed-common)
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_BINARY_DIR}")
 ADD_LIBRARY(xseed-common STATIC ${xseed-common_SRCS})
-target_link_libraries(xseed-common MSEED_LIBRARIES)
+target_link_libraries(xseed-common ${MSEED_LIBRARIES})
 
 ADD_SUBDIRECTORY(mseed2xseed)
 ADD_SUBDIRECTORY(xseed2json)

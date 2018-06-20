@@ -1,43 +1,26 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#include <xseed-common/vcs_getopt.h>
+#else
+#include <unistd.h>
+#include <getopt.h>
+#endif
+
 #include "cmd_opt.h"
 #include "constants.h"
+#include "array.h"
 
-int expand_char (char **ptr, int current_len, size_t obj_size)
+int xseed_get_short_getopt_string (char **short_opt_string, const struct xseed_option_s *options)
 {
-    int ret_len;
-
-    if (0 ==  current_len)
-    {
-        ret_len = 1;
-    }
-    else
-    {
-        ret_len = (int)(1.5f * (double)current_len);
-    }
-
-    if (ret_len == current_len)
-    {
-        ret_len++;
-    }
-
-    *ptr = realloc(*ptr, ret_len * obj_size);
-    if (NULL == *ptr)
-    {
-        return XSEED_MALLOC_ERROR;
-    }
-    return ret_len;
-}
-
-int xseed_get_short_getopt_string (char **short_opt_string, struct xseed_option_s *options)
-{
-    if (null == options)
+    if (NULL == options)
     {
         return XSEED_BAD_INPUT;
     }
     char *temp=NULL;
     int total_len=0, alloc_len =0;
-    for (struct xseed_option_s *option_ptr=options; option_ptr != NULL && 0 != option_ptr->short_option;option_ptr++)
+    for (const struct xseed_option_s *option_ptr=options; option_ptr != NULL && 0 != option_ptr->short_option;option_ptr++)
     {
         if (option_ptr->short_option < 0 || option_ptr->argument_type < 0 || option_ptr->argument_type > 2)
         {
@@ -57,12 +40,12 @@ int xseed_get_short_getopt_string (char **short_opt_string, struct xseed_option_
                 break;
             default:
                 len = 0;
-                str = "";
+                 str = "";
                 break;
         }
         while (total_len + 2 + len > alloc_len)
         {
-            alloc_len = expand_char(&temp, alloc_len, sizeof(char));
+            alloc_len = expand_array((void**)&temp, alloc_len, sizeof(char));
         }
         snprintf(temp + total_len, alloc_len - total_len, "%c%s", option_ptr->short_option, str);
         total_len += 1 + len;
@@ -70,7 +53,7 @@ int xseed_get_short_getopt_string (char **short_opt_string, struct xseed_option_
     *short_opt_string = temp;
 }
 
-int xseed_get_long_getopt_array(struct option **long_opt_array, struct xseed_option_s *options)
+int xseed_get_long_getopt_array(struct option **long_opt_array, const struct xseed_option_s *options)
 {
     if (NULL == options)
     {
@@ -79,7 +62,7 @@ int xseed_get_long_getopt_array(struct option **long_opt_array, struct xseed_opt
     struct option *temp = NULL;
     int total_len, alloc_len = 0;
 
-    for (struct xseed_option_s *option_ptr=options; option_ptr != NULL && 0 != option_ptr->short_option;option_ptr++)
+    for (const struct xseed_option_s *option_ptr=options; option_ptr != NULL && 0 != option_ptr->short_option;option_ptr++)
     {
         if (option_ptr->long_option == NULL || option_ptr->argument_type < 0 || option_ptr->argument_type > 2)
         {
@@ -87,11 +70,11 @@ int xseed_get_long_getopt_array(struct option **long_opt_array, struct xseed_opt
         }
         while (total_len + 2 > alloc_len)
         {
-            alloc_len = expand_char(&temp, alloc_len, sizeof(char));
+            alloc_len = expand_array((void **)&temp, alloc_len, sizeof(struct option));
         }
         (temp+total_len)->name = option_ptr->long_option;
         (temp+total_len)->has_arg = option_ptr->argument_type;
-        (temp+total_len)->flag = option_ptr->var_to_fill;
+        (temp+total_len)->flag = option_ptr->variable_to_fill;
         (temp+total_len)->val = option_ptr->short_option;
         total_len++;
     }
