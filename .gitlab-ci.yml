@@ -123,19 +123,19 @@ Build_Ubuntu_14.04:
         - make
     stage: build
 
-    #Build_Windows_10:
-    #tags:
-    #    - windows10
-    #before_script:
-    #    - call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\VsDevCmd.bat"
-    #script:
-    #    - mkdir build
-    #    - cd build
-    #    - cmake ..
-    #    - msbuild xseed-utils.sln
-    #after_script:
-    #    - rm build
-    #stage: build
+Build_Windows_10:
+    tags:
+        - windows10
+    before_script:
+        - call "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Community\\Common7\\Tools\\VsDevCmd.bat"
+    script:
+        - mkdir build
+        - cd build
+        - cmake ..
+        - msbuild xseed-utils.sln
+    after_script:
+        - rm build
+    stage: build
 
 test_docs:
   image: ruby:2.3
