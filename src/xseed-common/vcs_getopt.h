@@ -68,6 +68,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <windows.h>
+#include "cmd_opt.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -267,14 +268,6 @@ extern int optreset;
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-struct option /* specification for a long form option...	*/
-{
-  const char *name; /* option name, without leading hyphens */
-  int has_arg; /* does it take an argument?		*/
-  int *flag; /* where to save its status, or NULL	*/
-  int val; /* its associated status value		*/
-};
 
 enum /* permitted values for its `has_arg' field...	*/
 {

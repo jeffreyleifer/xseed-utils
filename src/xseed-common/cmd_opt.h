@@ -1,7 +1,15 @@
 #ifndef __XSEED_COMMON_CMD_OPT_H__
 #define __XSEED_COMMON_CMD_OPT_H__
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-#include <xseed-common/vcs_getopt.h>
+
+struct option /* specification for a long form option...	*/
+{
+  const char *name; /* option name, without leading hyphens */
+  int has_arg; /* does it take an argument?		*/
+  int *flag; /* where to save its status, or NULL	*/
+  int val; /* its associated status value		*/
+};
+
 #else
 #include <unistd.h>
 #include <getopt.h>

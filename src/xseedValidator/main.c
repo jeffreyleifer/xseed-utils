@@ -6,6 +6,12 @@
 #include <xseed-common/files.h>
 #include "warnings.h"
 #include "validator.h"
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#include <xseed-common/vcs_getopt.h>
+#else
+#include <unistd.h>
+#include <getopt.h>
+#endif
 
 static const struct xseed_option_s args[] = {
     {'h',    "help", "Usage", NULL, NO_OPTARG},
