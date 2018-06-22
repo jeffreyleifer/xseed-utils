@@ -9,6 +9,8 @@
     return len;
 }*/
 
+#pragma comment(lib, "Ws2_32.lib")
+
 char *strndup(const char *s, size_t n)
 {
     size_t actual_len = strnlen(s, n);
