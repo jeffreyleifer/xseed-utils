@@ -1,12 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-#include <xseed-common/vcs_getopt.h>
-#else
-#include <unistd.h>
-#include <getopt.h>
-#endif
 
 #include "cmd_opt.h"
 #include "constants.h"
