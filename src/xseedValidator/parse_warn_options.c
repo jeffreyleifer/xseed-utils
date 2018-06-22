@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <xseed-common/array.h>
 #include "warnings.h"
-#include "xseed_string.h"
+#include <xseed-common/xseed_string.h>
 
 
 bool parse_warn_options(struct warn_options_s *warn_options, char * string_parse)
