@@ -3,9 +3,9 @@
 #include <string.h>
 #include "xseed_string.h"
 
-#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+/*#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #pragma comment(lib, "Ws2_32.lib")
-#endif
+#endif*/
 #ifndef HAS_STRNLEN
 size_t strnlen(const char *s, size_t max_len)
 {

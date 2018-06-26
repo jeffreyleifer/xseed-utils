@@ -17,4 +17,5 @@ bool check_file (FILE *input)
         check_extra_headers(input, extra_header_len);
         check_payloads(input, payload_len, payload_fmt);
     }
+    return true;
 }
