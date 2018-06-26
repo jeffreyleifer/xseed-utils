@@ -2,15 +2,18 @@
 #include <string.h>
 #include "xseed_string.h"
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
-/*size_t strnlen(const char *s, size_t max_len)
+#pragma comment(lib, "Ws2_32.lib")
+#endif
+#ifndef HAS_STRNLEN
+size_t strnlen(const char *s, size_t max_len)
 {
     size_t len = 0;
     for (; len < max_len && 0 != s[len]; len);
     return len;
-}*/
+}
+#endif /* HAS_STRLEN */
 
-#pragma comment(lib, "Ws2_32.lib")
-
+#ifndef HAS_STRNDUP
 char *strndup(const char *s, size_t n)
 {
     size_t actual_len = strnlen(s, n);
@@ -18,4 +21,4 @@ char *strndup(const char *s, size_t n)
     memcpy(out, s, actual_len);
     return out;
 };
-#endif
+#endif /* HAS_STRDUP */
