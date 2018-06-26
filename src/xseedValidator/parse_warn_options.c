@@ -18,7 +18,7 @@ bool parse_warn_options(struct warn_options_s *warn_options, char * string_parse
         {
             tokened_alloc = expand_array((void **) &tokened, tokened_alloc, sizeof(char *));
         }
-        int token_len = strnlen(token, 1024);
+        size_t token_len = strnlen(token, 1024);
         tokened[tokened_len++] = strndup(token, token_len);
     }
     for (size_t i = 0; i < tokened_len && !bad_option;i++)
