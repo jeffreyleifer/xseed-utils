@@ -9,11 +9,13 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 #TODO: check for thirdparty libraries (tinycbor)
 
 # Some users Might want to build xseed as a static library
+IF (NOT MSVC)
 SET(XSEED_BUILD_SHARED ON CACHE BOOL "Build libxseed as a shared library
 vs static")
 # Tells ADD_LIBRARY to default to static or shared depending on
 # XSEED_BUILD_SHARED
 OPTION(BUILD_SHARED_LIBS "Build the shared library" ${XSEED_BUILD_SHARED})
+ENDIF (NOT MSVC)
 
 FIND_PACKAGE(MSEED 3.0)
 INCLUDE(CheckFunctionExists)
@@ -21,7 +23,13 @@ CHECK_FUNCTION_EXISTS(strnlen HAS_STRNLEN)
 CHECK_FUNCTION_EXISTS(strndup HAS_STRNDUP)
 
 IF (MSVC)
-    MESSAGE(STATUS "Building for Visual Studio")
+    foreach(flag_var
+            CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+        if(${flag_var} MATCHES "/MD")
+            string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+        endif(${flag_var} MATCHES "/MD")
+    endforeach(flag_var)
 ENDIF(MSVC)
 
 ADD_SUBDIRECTORY(libsrc)
