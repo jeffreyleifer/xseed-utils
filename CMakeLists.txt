@@ -20,6 +20,10 @@ INCLUDE(CheckFunctionExists)
 CHECK_FUNCTION_EXISTS(strnlen HAS_STRNLEN)
 CHECK_FUNCTION_EXISTS(strndup HAS_STRNDUP)
 
+IF (MSVC)
+    MESSAGE(STATUS "Building for Visual Studio")
+ENDIF(MSVC)
+
 ADD_SUBDIRECTORY(libsrc)
 
 INCLUDE(AddSources)
