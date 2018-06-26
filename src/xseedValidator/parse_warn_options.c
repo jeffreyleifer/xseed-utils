@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <string.h>
 #include <stdbool.h>
 #include <xseed-common/array.h>
 #include "warnings.h"
@@ -22,7 +21,7 @@ bool parse_warn_options(struct warn_options_s *warn_options, char * string_parse
         int token_len = strnlen(token, 1024);
         tokened[tokened_len++] = strndup(token, token_len);
     }
-    for (int i = 0; i < tokened_len && !bad_option;i++)
+    for (size_t i = 0; i < tokened_len && !bad_option;i++)
     {
         //split on equals
         char *flag = strtok(tokened[i],"=");
@@ -39,7 +38,7 @@ bool parse_warn_options(struct warn_options_s *warn_options, char * string_parse
         }
     }
 
-    for (int i = 0; i < tokened_len;i++)
+    for (size_t i = 0; i < tokened_len;i++)
     {
         free(tokened[i]);
         tokened[i]=NULL;
