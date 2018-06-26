@@ -1,7 +1,7 @@
 ---
 layout: documentation
 category: Validator
-order: 1
+order: 2
 title: Basics
 ---
 This is a placeholder for documentation about Basics
