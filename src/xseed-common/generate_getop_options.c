@@ -54,7 +54,7 @@ int xseed_get_long_getopt_array(struct option **long_opt_array, const struct xse
         return XSEED_BAD_INPUT;
     }
     struct option *temp = NULL;
-    int total_len, alloc_len = 0;
+    int total_len = 0, alloc_len = 0;
 
     for (const struct xseed_option_s *option_ptr=options; option_ptr != NULL && 0 != option_ptr->short_option;option_ptr++)
     {
