@@ -1,6 +1,8 @@
+#include <xseed-common/config.h>
 #include <stdlib.h>
 #include <string.h>
 #include "xseed_string.h"
+
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
 #pragma comment(lib, "Ws2_32.lib")
 #endif
