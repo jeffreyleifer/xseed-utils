@@ -43,3 +43,26 @@ IF(MSEED_BUILD)
 ELSEIF (NOT MSEED_CORRECT_VERSION_FOUND)
     MESSAGE(FATAL_ERROR "xSEED-utils requires libmseed >= 3.0.0")
 ENDIF(MSEED_BUILD)
+
+IF (WJELEMENT_FOUND)
+    SET(WJELEMENT_BUILD FALSE CACHE BOOL "Build static libwsjelement vs using
+    system one")
+ELSE (WJELEMENT_FOUND)
+    SET(WJELEMENT_BUILD TRUE CACHE BOOL "Build static libwsjelement vs using
+    system one")
+ENDIF (WJELEMENT_FOUND)
+
+IF (WJELEMENT_BUILD)
+    ExternalProject_Add(WJELEMENT_LIBRARY
+        GIT_REPOSITORY https://github.com/netmail-open/wjelement.git
+        CMAKE_ARGS -DSTATIC_LIB=y
+        INSTALL_COMMAND ""
+        )
+    ExternalProject_Get_Property(WJELEMENT_LIBRARY binary_dir)
+    ADD_LIBRARY(WJELEMENT_LIBRARIES STATIC IMPORTED)
+    SET_PROPERTY(TARGET WJELEMENT_LIBRARIES PROPERTY IMPORTED_LOCATION
+        ${binary_dir}/src/wjelement/libwjelement.a)
+    ADD_DEPENDENCIES(WJELEMENT_LIBRARIES WJELEMENT_LIBRARY)
+ELSEIF(NOT WJELEMENT_FOUND)
+    MESSAGE(FATAL_ERROR "xseed-utils requires wsjelement")
+ENDIF(WJELEMENT_BUILD)
