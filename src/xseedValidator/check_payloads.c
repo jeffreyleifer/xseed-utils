@@ -37,5 +37,9 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
             answer = false;
             break;
     }
+    if (buffer)
+    {
+        free(buffer);
+    }
     return answer;
 }

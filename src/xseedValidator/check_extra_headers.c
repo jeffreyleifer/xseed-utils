@@ -26,6 +26,7 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
     {
         /* TODO warn reached end of file */
         free(buffer);
+        buffer = NULL;
         output = false;
     }
 
@@ -51,6 +52,9 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
 
     /*TODO other checks */
 
-    free (buffer);
+    if (buffer)
+    {
+        free (buffer);
+    }
     return output;
 }
