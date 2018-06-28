@@ -4,8 +4,9 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "validator.h"
+#include "warnings.h"
 
-bool check_header(FILE *input_file, long file_len, long *file_pos, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt)
+bool check_header(struct warn_options_s *options, FILE *input_file, long file_len, long *file_pos, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt)
 {
     char buffer[XSEED_STATIC_HEADER_LEN];
     if ( XSEED_STATIC_HEADER_LEN != fread((void *)buffer, sizeof(char), XSEED_STATIC_HEADER_LEN, input_file))

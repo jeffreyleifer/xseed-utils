@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <xseed-common/cmd_opt.h>
 #include <xseed-common/files.h>
+#include <xseed-common/xseed_string.h>
 #include "warnings.h"
 #include "validator.h"
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
@@ -16,6 +17,7 @@
 static const struct xseed_option_s args[] = {
     {'h',    "help", "Usage", NULL, NO_OPTARG},
     {'f',    "file", "File to validate", NULL, MANDATORY_OPTARG},
+    {'j',  "schema", "Json Schemas", NULL, MANDATORY_OPTARG},
     {'v', "verbose", "Verbosity level", NULL, OPTIONAL_OPTARG},
     {'W',      NULL, "Warning flag", NULL, MANDATORY_OPTARG},
     {  0,         0, 0, 0, 0}};
@@ -29,6 +31,7 @@ int main(int argc, char **argv)
     char *file_name = NULL;
     struct warn_options_s warn_options[1];
     unsigned char display_usage = 0;
+    char * schema_file_name =NULL;
 
     memset(warn_options, 0, sizeof(struct warn_options_s));
 
@@ -41,9 +44,7 @@ int main(int argc, char **argv)
         {
             int file_name_size;
             case 'f':
-                file_name_size = strnlen(optarg, 1024);
-                file_name = (char *)calloc(file_name_size, sizeof(char));
-                memcpy(file_name, optarg, file_name_size);
+                file_name = strndup(optarg, 1024);
                 break;
             case 'v':
                 if (0 == optarg )
@@ -60,6 +61,9 @@ int main(int argc, char **argv)
                 break;
             case 'h':
                 display_usage =1;
+            case 'j':
+                schema_file_name = strndup(optarg, 1024);
+                break;
             default:
                 display_usage++;
                 break;
@@ -85,7 +89,16 @@ int main(int argc, char **argv)
     FILE *file = NULL;
     file = fopen(file_name, "r");
     // run tests
-    bool valid = check_file(file);
+    bool valid = check_file(warn_options, file, schema_file_name);
     fclose(file);
+    
+    if (file_name)
+    {
+        free(file_name);
+    }
+    if (schema_file_name)
+    {
+        free(schema_file_name);
+    }
     return valid ? EXIT_SUCCESS : EXIT_FAILURE;
 }

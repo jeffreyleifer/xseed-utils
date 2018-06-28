@@ -5,7 +5,7 @@
 #include "validator.h"
 #include "warnings.h"
 
-bool check_payloads(FILE *input, uint32_t payload_len, uint8_t payload_fmt)
+bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payload_len, uint8_t payload_fmt)
 {
     bool answer = true;
     char *buffer = (char *) calloc(payload_len +1, sizeof(char));
@@ -19,7 +19,7 @@ bool check_payloads(FILE *input, uint32_t payload_len, uint8_t payload_fmt)
     {
         case 0: /* text */
             /* if this was succesfull but already made false we need to keep */
-            answer = check_payload_text(payload_len, buffer)? answer : false;
+            answer = check_payload_text(options, payload_len, buffer)? answer : false;
             break;
         case 1: /* 16-bit, integer, little-endian*/
         case 3: /* 32-bit, integer, little-endian*/

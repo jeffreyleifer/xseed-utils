@@ -3,7 +3,7 @@ init_target_source_dir(xseed-common)
 ADD_SUBDIRECTORY(xseed-common)
 
 INCLUDE_DIRECTORIES("${CMAKE_CURRENT_SOURCE_DIR}"
-    "${CMAKE_CURRENT_BINARY_DIR}")
+    "${CMAKE_CURRENT_BINARY_DIR}" ${WJELEMENT_INCLUDE_DIRS})
 ADD_LIBRARY(xseed-common STATIC ${xseed-common_SRCS})
 target_link_libraries(xseed-common ${MSEED_LIBRARIES} ${WJELEMENT_LIBRARIES})
 IF (${CMAKE_VERSION} VERSION_LESS 3.1)
