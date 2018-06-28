@@ -11,11 +11,11 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     char buffer[XSEED_STATIC_HEADER_LEN];
     if ( XSEED_STATIC_HEADER_LEN != fread((void *)buffer, sizeof(char), XSEED_STATIC_HEADER_LEN, input_file))
     {
-        /*TODO ENDOFFILE */
+        printf("/*TODO ENDOFFILE */");
     }
     if (buffer[0] != 'M' && buffer[1] != 'S')
     {
-        /*TODO iheader doesn't start with correct flags */
+        printf("/*TODO iheader doesn't start with correct flags */");
     }
     if (3 != (uint8_t)buffer[2])
     {
@@ -27,20 +27,20 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     uint16_t doy = buffer[6] + (buffer[7]*(256));
     if (366 < doy || 1 > doy)
     {
-        /*TODO incorrect day of year */
+        printf("/*TODO incorrect day of year */");
     }
     
     if ( 23 < (uint8_t)buffer[8])
     {
-        /*TODO to many hours in a day */
+        printf("/*TODO to many hours in a day */");
     }
     if ( 59 < (uint8_t)buffer[9])
     {
-        /*TODO to many minutes in an hour */
+        printf("/*TODO to many minutes in an hour */");
     }
     if ( 60 < (uint8_t)buffer[10])
     {
-        /*TODO to many seconds in a minute */
+        printf("/*TODO to many seconds in a minute */");
     }
     *payload_fmt = buffer[11];
     /*TODO check payload_fmt*/

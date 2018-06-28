@@ -24,6 +24,7 @@ bool parse_warn_options(struct warn_options_s *warn_options, char * string_parse
     }
     for (size_t i = 0; i < tokened_len && !bad_option;i++)
     {
+        // xseedvalidator --file myfile.mseeid -W error
         //split on equals
         char *flag = strtok(tokened[i],"=");
         char *value = strtok(NULL,"=");

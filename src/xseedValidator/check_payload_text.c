@@ -3,6 +3,7 @@
 #include "validator.h"
 #include "warnings.h"
 
+//When data encoding is ASCII
 bool check_payload_text(struct warn_options_s *options, uint32_t payload_len, char *buffer)
 {
     /*TODO do checks on text records */

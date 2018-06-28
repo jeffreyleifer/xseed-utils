@@ -1,17 +1,19 @@
 INCLUDE(ExternalProject)
-
+#Check for mseed and mseed version 3
 IF(MSEED_FOUND AND ((MSEED_VERSION VERSION_GREATER "3") OR (MSEED_VERSION VERSION_EQUAL "3")))
     SET(MSEED_CORRECT_VERSION_FOUND TRUE)
 ELSE(MSEED_FOUND AND ((MSEED_VERSION VERSION_GREATER "3") OR (MSEED_VERSION VERSION_EQUAL "3")))
     SET(MSEED_CORRECT_VERSION_FOUND FALSE)
 ENDIF(MSEED_FOUND AND ((MSEED_VERSION VERSION_GREATER "3") OR (MSEED_VERSION VERSION_EQUAL "3")))
 
+#set to build if lib not found
 IF(MSEED_CORRECT_VERSION_FOUND)
     SET(MSEED_BUILD FALSE CACHE BOOL "build static libmseed")
 ELSE(MSEED_CORRECT_VERSION_FOUND)
     SET(MSEED_BUILD TRUE CACHE BOOL "build static libmseed")
 ENDIF(MSEED_CORRECT_VERSION_FOUND)
 
+#
 IF(MSEED_BUILD)
     IF (MSVC)
         SET(MAKE_CMD nmake /F Makefile.win)
@@ -20,17 +22,19 @@ IF(MSEED_BUILD)
         SET(MAKE_CMD CFLAGS=\"-std=c99\" make)
         SET(mseed_lib libmseed.a)
     ENDIF (MSVC)
-    ExternalProject_Add(MSEED_LIBRARY 
+#Pulls in libmseed and builds it
+    ExternalProject_Add(MSEED_LIBRARY
         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libmseed
         GIT_REPOSITORY https://github.com/iris-edu/libmseed.git
         GIT_TAG mseed3-simpleheader
-        #        CONFIGURE_COMMAND ""
+        #        CONFIGURE_COMMAND "" mseed spec
         CONFIGURE_COMMAND ${CMAKE_COMMAND} -E copy_directory <SOURCE_DIR> <BINARY_DIR>
         BUILD_COMMAND ${MAKE_CMD}
         #        BUILD_IN_SOURCE TRUE
         INSTALL_COMMAND ""
         )
 
+    #create build target
     ExternalProject_Get_Property(MSEED_LIBRARY binary_dir)
     ExternalProject_Get_Property(MSEED_LIBRARY source_dir)
 
@@ -39,6 +43,7 @@ IF(MSEED_BUILD)
     SET_PROPERTY(TARGET MSEED_LIB PROPERTY IMPORTED_LOCATION
         ${binary_dir}/${mseed_lib})
 
+    #import vars from FIND into main cmake
     ADD_DEPENDENCIES(MSEED_LIB MSEED_LIBRARY)
     GET_TARGET_PROPERTY(MSEED_LIB_FLAG MSEED_LIB IMPORTED_LOCATION)
     SET(MSEED_LIBRARIES "${MSEED_LIB_FLAG}" PARENT_SCOPE)
@@ -65,6 +70,7 @@ IF (WJELEMENT_BUILD)
     ExternalProject_Get_Property(WJELEMENT_LIBRARY binary_dir)
     ExternalProject_Get_Property(WJELEMENT_LIBRARY source_dir)
     ADD_LIBRARY(WJELEMENT_LIB STATIC IMPORTED)
+        #setup external libs
     SET_PROPERTY(TARGET WJELEMENT_LIB PROPERTY IMPORTED_LOCATION
         ${binary_dir}/src/wjelement/libwjelement.a)
     ADD_DEPENDENCIES(WJELEMENT_LIB WJELEMENT_LIBRARY)

@@ -22,6 +22,7 @@ INCLUDE(CheckFunctionExists)
 CHECK_FUNCTION_EXISTS(strnlen HAS_STRNLEN)
 CHECK_FUNCTION_EXISTS(strndup HAS_STRNDUP)
 
+#Debug for windows building against a static runtime (libs instead of dlls)
 IF (MSVC)
     foreach(flag_var
             CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE

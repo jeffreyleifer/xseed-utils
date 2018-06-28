@@ -9,6 +9,7 @@
 
 static void schema_error_func(void *client, const char *format, ...)
 {
+//TODO format to other log messages
     va_list ap;
 	va_start(ap, format);
 	vfprintf(stderr, format, ap);

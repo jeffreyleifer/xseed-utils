@@ -83,6 +83,7 @@ int main(int argc, char **argv)
     if (!xseed_file_exists(file_name))
     {
         //exit
+        printf("File Not Found! %s",file_name);
         return EXIT_FAILURE;
     }
     // Open file
