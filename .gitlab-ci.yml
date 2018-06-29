@@ -135,7 +135,7 @@ Build_Windows_10:
         - msbuild xseed-utils.sln
     after_script:
         - cd ..
-        - rm /S build
+        - rmdir /S build
     stage: build
 
 test_docs:
