@@ -67,11 +67,10 @@ IF (WJELEMENT_BUILD)
         IF (CMAKE_BUILD_TYPE)
             SET(LIB_PREFIX "${CMAKE_BUILD_TYPE}/")
         ELSE (CMAKE_BUILD_TYPE)
-            SET(LIB_PREFIX "Debug/")
+            SET(LIB_PREFIX "${CMAKE_BUILD_TYPE}/")
         ENDIF (CMAKE_BUILD_TYPE)
     ELSE (MSVC)
         SET(LIB_POSTFIX "a")
-        M
         SET(LIB_PREFIX "lib")
     ENDIF (MSVC)
 
