@@ -23,17 +23,17 @@ CHECK_FUNCTION_EXISTS(strnlen HAS_STRNLEN)
 CHECK_FUNCTION_EXISTS(strndup HAS_STRNDUP)
 
 #Debug for windows building against a static runtime (libs instead of dlls)
-IF (MSVC)
-    foreach(flag_var
-            CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
-            CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
-            CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-        if(${flag_var} MATCHES "/MD")
-            string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-        endif(${flag_var} MATCHES "/MD")
-    endforeach(flag_var)
-ENDIF(MSVC)
+#IF (MSVC)
+#    foreach(flag_var
+#            CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+#            CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+#            CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+#            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+#        if(${flag_var} MATCHES "/MD")
+#            string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+#        endif(${flag_var} MATCHES "/MD")
+#    endforeach(flag_var)
+#ENDIF(MSVC)
 
 ADD_SUBDIRECTORY(libsrc)
 
