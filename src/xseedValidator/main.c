@@ -5,6 +5,7 @@
 #include <xseed-common/cmd_opt.h>
 #include <xseed-common/files.h>
 #include <xseed-common/xseed_string.h>
+#include <libmseed.h>
 #include "warnings.h"
 #include "validator.h"
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
