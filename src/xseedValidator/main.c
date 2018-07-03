@@ -87,6 +87,20 @@ int main(int argc, char **argv)
         printf("File Not Found! %s",file_name);
         return EXIT_FAILURE;
     }
+
+
+    MS3Record *msr = NULL;
+
+      int retcode;
+
+     while ((ms3_readmsr (&msr, file_name, 0, NULL, 0, 3) == MS_NOERROR ))
+    {
+      /* Do something with the record here, e.g. print */
+      msr3_print (msr, 3);
+    }
+
+
+
     // Open file
     FILE *file = NULL;
     file = fopen(file_name, "r");
