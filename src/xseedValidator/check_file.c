@@ -5,7 +5,7 @@
 #include "validator.h"
 #include "warnings.h"
 
-bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_name)
+bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_name, char *file_name)
 {
 
     int file_len = xseed_file_length(input);
@@ -18,7 +18,7 @@ bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_
         check_header(options, input, file_len, &file_pos, &identifier_len, &extra_header_len, &payload_len, &payload_fmt);
         check_identifier(options, input, identifier_len);
         check_extra_headers(options, schema_file_name, input, extra_header_len);
-        check_payloads(options, input, payload_len, payload_fmt);
+        check_payloads(options, input, payload_len, payload_fmt,file_name);
     }
     return true;
 }

@@ -105,7 +105,7 @@ int main(int argc, char **argv)
     FILE *file = NULL;
     file = fopen(file_name, "r");
     // run tests
-    bool valid = check_file(warn_options, file, schema_file_name);
+    bool valid = check_file(warn_options, file, schema_file_name,file_name);
     fclose(file);
     
     if (file_name)

@@ -2,10 +2,11 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <libmseed.h>
 #include "validator.h"
 #include "warnings.h"
 
-bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payload_len, uint8_t payload_fmt)
+bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payload_len, uint8_t payload_fmt,char* file_name)
 {
     bool answer = true;
     char *buffer = (char *) calloc(payload_len +1, sizeof(char));
