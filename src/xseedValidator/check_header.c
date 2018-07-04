@@ -201,18 +201,26 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     };
 
 
+    //TODO fix this
     /*convert to float64 */
-
     double sample_rate;
     buffer_to_number(buffer+16, sizeof(double), XSEED_DOUBLE, &sample_rate);
 
 
-    uint32_t number_samples = buffer[24] + buffer[25]*(0xFF+1) +buffer[26]*(0xFFFF+1) + buffer[27]*(0xFFFFFF+1);
-    uint32_t CRC = buffer[28] + buffer[29]*(0xFF+1) +buffer[30]*(0xFFFF+1) + buffer[31]*(0xFFFFFF+1);
-    uint8_t dataPubVersion = buffer[32];
-    *identifier_len = buffer[33];
-    *extra_header_len =  buffer[34] + buffer[35]*(0xFF+1);
-    *payload_len = buffer[36] + buffer[37]*(0xFF+1) +buffer[38]*(0xFFFF+1) + buffer[39]*(0xFFFFFF+1);
+    //uint32_t number_samples = buffer[24] + buffer[25]*(0xFF+1) +buffer[26]*(0xFFFF+1) + buffer[27]*(0xFFFFFF+1);
+    uint32_t number_samples = ((uint32_t)buffer[24] >> 24) | ((uint32_t)buffer[25] >> 16) | ((uint32_t)buffer[26] >> 8) | ((uint32_t)buffer[27]);
+
+    //uint32_t CRC = buffer[28] + buffer[29]*(0xFF+1) +buffer[30]*(0xFFFF+1) + buffer[31]*(0xFFFFFF+1);
+    uint32_t CRC = ((uint32_t)buffer[28] >> 24) | ((uint32_t)buffer[29] >> 16) | ((uint32_t)buffer[30] >> 8) | ((uint32_t)buffer[31]);
+    uint8_t dataPubVersion = (uint8_t)buffer[32];
+    *identifier_len = (uint8_t)buffer[33];
+
+    uint16_t extra_header_l = (uint8_t )buffer[34] | (uint16_t)buffer[35] << 8;
+    uint32_t payload_l = ((uint32_t)buffer[36] >> 24) | ((uint32_t)buffer[37] >> 16) | ((uint32_t)buffer[38] >> 8) | ((uint32_t)buffer[39]);
+
+    //TODO assign to output values
+    //*extra_header_len =  buffer[34] + buffer[35]*(0xFF+1);
+    //*payload_len = buffer[36] + buffer[37]*(0xFF+1) +buffer[38]*(0xFFFF+1) + buffer[39]*(0xFFFFFF+1);
 
     return true;
 }
