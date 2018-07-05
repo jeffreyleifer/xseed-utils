@@ -6,7 +6,7 @@
 #include "validator.h"
 #include "warnings.h"
 
-bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payload_len, uint8_t payload_fmt,char* file_name)
+bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payload_len, uint8_t payload_fmt, char* file_name)
 {
     bool answer = true;
     char *buffer = (char *) calloc(payload_len +1, sizeof(char));
@@ -15,6 +15,8 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
     {
         answer = false;
     }
+
+
 
     switch (payload_fmt)
     {
@@ -42,5 +44,19 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
     {
         free(buffer);
     }
+
+    //Here we decode and check using libmseed's functions,not using the code above, maybe to use in later revisions
+    MS3Record *msr = NULL;
+
+    int retcode;
+
+    while ((ms3_readmsr (&msr, file_name, 0, NULL, 0, 3) == MS_NOERROR ))
+    {
+
+    }
+
+
+
+
     return answer;
 }

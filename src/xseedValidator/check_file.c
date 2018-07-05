@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <xseed-common/files.h>
+#include <libmseed.h>
 #include "validator.h"
 #include "warnings.h"
 
@@ -9,6 +10,8 @@ bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_
 {
 
     int file_len = xseed_file_length(input);
+    ms_log(0,"\n\nReading file %s\n",file_name);
+    ms_log(0,"Record length of %d found, starting verification...\n",file_len);
     for (long file_pos = ftell(input);file_len > file_pos; file_pos = ftell(input))
     {
         uint8_t identifier_len = 0;

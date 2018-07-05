@@ -59,11 +59,13 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     char buffer[XSEED_STATIC_HEADER_LEN];
 
     //read values into buffer, dummy EOF check
-    ms_log (0, "\n\nReading in MS file for verification...\n");
+    ms_log (0, "---------------------------------------------\n");
+    ms_log (0, "Reading header for verification in little endian format...\n");
     if ( XSEED_STATIC_HEADER_LEN != fread((void *)buffer, sizeof(char), XSEED_STATIC_HEADER_LEN, input_file))
     {
         ms_log (2, "Error: File size mismatch, please double check input record\n");
     }
+
 
 
     //Check Header flags
@@ -71,7 +73,8 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     flag[0] = (char)buffer[0];
     flag[1] = (char)buffer[1];
 
-    ms_log (0, "Checking Header Flag value: %s\n", flag);
+
+    ms_log (0, "Checking Header Flag value: %c%c\n", flag[0],flag[1]);
     //if ((char)buffer[0] != 'M' && (char)buffer[1] != 'S')
     if(!(flag[0] == 'M' && flag[1] == 'S'))
     {
@@ -80,7 +83,7 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
 
     //Check MS version
     uint8_t msVersion = (uint8_t)buffer[2];
-    ms_log (0, "Checking MS version value: %d\n", msVersion);
+    ms_log (0, "Checking File Version value: %d\n", msVersion);
     if (3 != msVersion)
     {
         ms_log(2,"Error: Header Version Value Incorrect ('3' currently is the only supported MS version)\n");
@@ -90,7 +93,7 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     //Check for valid year range
     // assuming you have read your bytes little-endian
     //TODO try casting with both uint16_t or uint8_t
-    uint16_t year = (uint8_t )buffer[8] | (uint16_t)buffer[9] << 8;
+    uint16_t year = (uint8_t )buffer[8] | (uint8_t)buffer[9] << 8;
     ms_log (0, "Checking Year value: %d\n", year);
     if(year < 0 || year > 65535)
     {
@@ -100,7 +103,7 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
 
     //Check for Valid Day-of-Year
     //assuming you have read your bytes little-endian
-    uint16_t doy = (uint8_t )buffer[10] | (uint16_t)buffer[11] << 8;
+    uint16_t doy = (uint8_t )buffer[10] | (uint8_t)buffer[11] << 8;
     ms_log (0, "Checking Day of Year value: %d\n", doy);
     if (366 < doy || 1 > doy)
     {
@@ -145,7 +148,7 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
 
     //My way
     // assuming you have read your bytes little-endian
-    uint32_t nanoseconds = ((uint32_t)buffer[4] >> 24) | ((uint32_t)buffer[5] >> 16) | ((uint32_t)buffer[6] >> 8) | ((uint32_t)buffer[7]);
+    uint32_t nanoseconds = ((uint8_t)buffer[4] | ((uint8_t)buffer[5] << 8) | ((uint8_t)buffer[6] << 16) | ((uint8_t)buffer[7] << 24));
     ms_log (0, "Checking Nanoseconds value: %d\n", nanoseconds);
     if (999999999 < nanoseconds)
     {
@@ -156,8 +159,7 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     //Check for Payload type
     uint8_t payload = (uint8_t)buffer[15];
 
-    //TODO assign to be out parameter
-    //*payload_fmt
+    *payload_fmt = payload;
 
     ms_log(0, "Checking Payload Flag: %d\n", payload);
     switch (payload)
@@ -178,13 +180,16 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
             ms_log(0, "Payload flag indicates IEEE 64-bit floats (double), little-endian payload\n");
             break;
         case 10: /* Steim-1 integer compressin, big-endian */
-            ms_log(0, "Steim-1 integer compressin, big-endian\n");
+            ms_log(0, "Steim-1 integer compression, big-endian\n");
             break;
         case 11: /* Steim-2 integer compressin, big-endian */
-            ms_log(0, "Steim-2 integer compressin, big-endian\n");
+            ms_log(0, "Steim-2 integer compression, big-endian\n");
+            break;
+        case 16: /* Steim-2 integer compressin, big-endian */
+            ms_log(0, "CDSN 16 bit gain ranged\n");
             break;
         case 19: /* Steim-3 integer compressin, big-endian */
-            ms_log(0, "Steim-3 integer compressin, big-endian\n");
+            ms_log(0, "Steim-3 integer compression, big-endian\n");
             break;
         case 53: /* 32-bit integer, little-endian, general compressor */
             ms_log(0, "32-bit integer, little-endian, general compressor\n");
@@ -201,26 +206,37 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     };
 
 
-    //TODO fix this
+    //TODO fix this, it doesn't convert to decimal numbers correctly
     /*convert to float64 */
     double sample_rate;
     buffer_to_number(buffer+16, sizeof(double), XSEED_DOUBLE, &sample_rate);
+    ms_log(0, "Checking sample rate value: %f\n", sample_rate);
 
 
-    //uint32_t number_samples = buffer[24] + buffer[25]*(0xFF+1) +buffer[26]*(0xFFFF+1) + buffer[27]*(0xFFFFFF+1);
-    uint32_t number_samples = ((uint32_t)buffer[24] >> 24) | ((uint32_t)buffer[25] >> 16) | ((uint32_t)buffer[26] >> 8) | ((uint32_t)buffer[27]);
+    //TODO check below values for (basic) validity
+    //uint32_t number_samples_old = buffer[24] + buffer[25]*(0xFF+1) +buffer[26]*(0xFFFF+1) + buffer[27]*(0xFFFFFF+1);
+    uint32_t number_samples = ((uint8_t)buffer[24] | ((uint8_t)buffer[25] << 8) | ((uint8_t)buffer[26] << 16) | ((uint8_t)buffer[27] << 24));
+    ms_log(0, "Checking number of samples value: %d\n", number_samples);
 
-    //uint32_t CRC = buffer[28] + buffer[29]*(0xFF+1) +buffer[30]*(0xFFFF+1) + buffer[31]*(0xFFFFFF+1);
-    uint32_t CRC = ((uint32_t)buffer[28] >> 24) | ((uint32_t)buffer[29] >> 16) | ((uint32_t)buffer[30] >> 8) | ((uint32_t)buffer[31]);
+    //uint32_t CRC_old = buffer[28] + buffer[29]*(0xFF+1) +buffer[30]*(0xFFFF+1) + buffer[31]*(0xFFFFFF+1);
+    uint32_t CRC = ((uint8_t)buffer[28]) | ((uint8_t)buffer[29] << 8) | ((uint8_t)buffer[30] << 16) | ((uint8_t)buffer[31]) << 24 ;
+    //TODO Use libmseed to verify the CRC value
+    ms_log(0, "*TODO* Checking CRC value: %d\n",CRC);
+
     uint8_t dataPubVersion = (uint8_t)buffer[32];
     *identifier_len = (uint8_t)buffer[33];
+    ms_log(0, "Checking Data Publication Version value: %d\n",dataPubVersion);
 
-    uint16_t extra_header_l = (uint8_t )buffer[34] | (uint16_t)buffer[35] << 8;
-    uint32_t payload_l = ((uint32_t)buffer[36] >> 24) | ((uint32_t)buffer[37] >> 16) | ((uint32_t)buffer[38] >> 8) | ((uint32_t)buffer[39]);
 
-    //TODO assign to output values
-    //*extra_header_len =  buffer[34] + buffer[35]*(0xFF+1);
-    //*payload_len = buffer[36] + buffer[37]*(0xFF+1) +buffer[38]*(0xFFFF+1) + buffer[39]*(0xFFFFFF+1);
+    uint16_t extra_header_l = (uint8_t )buffer[34] | (uint8_t)buffer[35] << 8;
+    ms_log(0, "Checking Extra Header Length value: %d\n",extra_header_l);
+    uint32_t payload_l = ((uint8_t)buffer[36] | ((uint8_t)buffer[37] << 8) | ((uint8_t)buffer[38] << 16) | ((uint8_t)buffer[39] << 24));
+    ms_log(0, "Checking Payload Length value: %d\n",payload_l);
+
+    //assign to output values
+    *payload_fmt = payload;
+    *extra_header_len =  extra_header_l;
+    *payload_len = payload_l;
 
     return true;
 }
