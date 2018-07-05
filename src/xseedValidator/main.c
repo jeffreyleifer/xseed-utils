@@ -88,16 +88,16 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
 
-
-    MS3Record *msr = NULL;
-
-      int retcode;
-
-     while ((ms3_readmsr (&msr, file_name, 0, NULL, 0, 3) == MS_NOERROR ))
-    {
-      /* Do something with the record here, e.g. print */
-      msr3_print (msr, 3);
-    }
+//
+//    MS3Record *msr = NULL;
+//
+//      int retcode;
+//
+//     while ((ms3_readmsr (&msr, file_name, 0, NULL, 0, 3) == MS_NOERROR ))
+//    {
+//      /* Do something with the record here, e.g. print */
+//      msr3_print (msr, 3);
+//    }
 
 
 
