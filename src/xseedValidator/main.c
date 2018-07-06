@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     {
         switch(opt)
         {
-            int file_name_size;
+            //int file_name_size;
             case 'f':
                 file_name = strndup(optarg, 1024);
                 break;

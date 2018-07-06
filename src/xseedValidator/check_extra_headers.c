@@ -5,6 +5,8 @@
 #include "validator.h"
 #include "warnings.h"
 #include <wjelement.h>
+#include <libmseed.h>
+
 #define SCHEMA_BUFFER_SIZE 1024u
 
 static void schema_error_func(void *client, const char *format, ...)
@@ -34,7 +36,13 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
     {
         char schema_buffer[SCHEMA_BUFFER_SIZE];
         //* open schema
+        ms_log(0,"Checking JSON file for valid structure: %s\n", schema);
         WJElement document_element = WJEParse(buffer);
+
+        //Print header to validate
+        char * extraHeaderStr =   WJEToString(document_element,true);
+
+        ms_log(0,"Extra header output:\n%s\n\n",extraHeaderStr);
         FILE *schema_file = fopen(schema, "r");
         WJElement schema_element = WJEOpenDocument(WJROpenFILEDocument(schema_file, schema_buffer, SCHEMA_BUFFER_SIZE), NULL, NULL, NULL);
         WJEErrCB errFunc = &schema_error_func;
@@ -42,7 +50,11 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
         if (! WJESchemaValidate(schema_element, document_element, errFunc, NULL, NULL, NULL))
         {
             output =false;
+            ms_log(3,"\nSomthing went wrong in validation\n");
             /*TODO warn anything not printed by schema error */
+        } else
+        {
+            ms_log(0,"\nSchema validation complete\n");
         }
     }
     else

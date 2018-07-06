@@ -14,7 +14,6 @@
 
 
 
-
 bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payload_len, uint8_t payload_fmt, char* file_name)
 {
 
@@ -70,12 +69,14 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
 
     while ((ms3_readmsr (&msr, file_name, 0, NULL, 0, 3) == MS_NOERROR ))
     {
-        msr3_print (msr, ppackets);
+         msr3_print (msr, ppackets);
 
+        //TODO get status message
         if (msr->formatversion == 3)
             ms_parse_raw3 (msr->record, msr->reclen, ppackets);
         else
             ms_parse_raw2 (msr->record, msr->reclen, ppackets, -1);
+
 
 
         if (msr->numsamples > 0)
