@@ -54,7 +54,7 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
             /*TODO warn anything not printed by schema error */
         } else
         {
-            ms_log(0,"\nSchema validation complete\n");
+            ms_log(0,"\nSchema Valid! Schema validation complete\n");
         }
     }
     else
