@@ -124,8 +124,10 @@ main (int argc, char **argv)
      ms_log (2, "Cannot serialize json to buffer: %s\n", jsonschema);
  //    return 1;
   }
-  
-  
+
+  //TODO cleanup
+  //json_free_serialized_string()
+  //json_value_free
 
 
 
