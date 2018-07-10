@@ -34,28 +34,39 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
 
     if (schema)
     {
+        ms_log(0,"---Starting extra header verification---\n", schema);
         char schema_buffer[SCHEMA_BUFFER_SIZE];
         //* open schema
         ms_log(0,"Checking JSON file for valid structure: %s\n", schema);
         WJElement document_element = WJEParse(buffer);
 
-        //Print header to validate
-        char * extraHeaderStr =   WJEToString(document_element,true);
+        if(document_element != NULL)
+        {
+            //Print header to validate
+            char *extraHeaderStr = WJEToString(document_element, true);
+            ms_log(0, "Extra header output:\n%s\n\n", extraHeaderStr);
+            free(extraHeaderStr);
 
-        ms_log(0,"Extra header output:\n%s\n\n",extraHeaderStr);
-        FILE *schema_file = fopen(schema, "r");
-        WJElement schema_element = WJEOpenDocument(WJROpenFILEDocument(schema_file, schema_buffer, SCHEMA_BUFFER_SIZE), NULL, NULL, NULL);
-        WJEErrCB errFunc = &schema_error_func;
-        /* check is valid json based on schema*/
-        if (! WJESchemaValidate(schema_element, document_element, errFunc, NULL, NULL, NULL))
-        {
-            output =false;
-            ms_log(3,"\nSomthing went wrong in validation\n");
-            /*TODO warn anything not printed by schema error */
+
+            FILE *schema_file = fopen(schema, "r");
+            WJElement schema_element = WJEOpenDocument(
+                    WJROpenFILEDocument(schema_file, schema_buffer, SCHEMA_BUFFER_SIZE), NULL, NULL, NULL);
+            WJEErrCB errFunc = &schema_error_func;
+            /* check is valid json based on schema*/
+            if (!WJESchemaValidate(schema_element, document_element, errFunc, NULL, NULL, NULL)) {
+                output = false;
+                /*TODO warn anything not printed by schema error */
+                ms_log(3, "\nError: Schema not valid! Something went wrong in validation\n");
+
+            } else {
+                ms_log(0, "\nSchema Valid!\n");
+            }
+
         } else
-        {
-            ms_log(0,"\nSchema Valid! Schema validation complete\n");
-        }
+            {
+                ms_log(1, "\nWarning: No extra headers found, nothing to validate schema against\n");
+            }
+
     }
     else
     {
@@ -68,5 +79,6 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
     {
         free (buffer);
     }
+    ms_log(0,"---Finished extra header verification---\n", schema);
     return output;
 }

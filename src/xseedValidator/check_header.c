@@ -51,7 +51,7 @@ All length values are specified in bytes, which are assumed to be 8-bits in leng
 ​*/
 
 
-
+//TODO test for big endian
 bool check_header(struct warn_options_s *options, FILE *input_file, long file_len, long *file_pos, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt)
 {
 
@@ -185,11 +185,19 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
         case 11: /* Steim-2 integer compressin, big-endian */
             ms_log(0, "Steim-2 integer compression, big-endian\n");
             break;
-        case 16: /* Steim-2 integer compressin, big-endian */
-            ms_log(0, "CDSN 16 bit gain ranged\n");
+        case 14: /* Steim-2 integer compressin, big-endian */
+            ms_log(0, "Steim-2 integer compression, big-endian\n");
+            break;
+            //TODO verify this with chad
+        case 16: /* GEOSCOPE Muxed 16/4 bit gain/exp ,little endian(?) */
+            ms_log(0, "GEOSCOPE Muxed 16/4 bit gain/exp, little endian(?)\n");
             break;
         case 19: /* Steim-3 integer compressin, big-endian */
             ms_log(0, "Steim-3 integer compression, big-endian\n");
+            break;
+            //TODO verify this with chad
+        case 30: /* SRO Gain Ranged Format, ?-endian */
+            ms_log(0, "SRO Gain Ranged Format, ?-endian\n");
             break;
         case 53: /* 32-bit integer, little-endian, general compressor */
             ms_log(0, "32-bit integer, little-endian, general compressor\n");
@@ -206,12 +214,20 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     };
 
 
-    //TODO fix this, it doesn't convert to decimal numbers correctly
+
     /*convert to float64 */
     double sample_rate;
-    buffer_to_number(buffer+16, sizeof(double), XSEED_DOUBLE, &sample_rate);
-    ms_log(0, "Checking sample rate value: %f\n", sample_rate);
+    //buffer_to_number(buffer+16, sizeof(double), XSEED_DOUBLE, &sample_rate);
 
+    sample_rate = *((double*)((uint8_t*)buffer+16));
+    if(sample_rate < 0 )
+    {
+        sample_rate = sample_rate * (-.01);//TODO ?????
+    }
+
+    //sample_rate = (uint64_t)buffer[16] |(uint64_t) buffer[17] << 8 | (uint64_t)buffer[18] << 16 | (uint64_t)buffer[19] << 24 | \
+    (uint64_t)buffer[20] << 32 | (uint64_t)buffer[21] << 40 | (uint64_t)buffer[22] << 48 | (uint64_t)buffer[23] << 56;
+    ms_log(0, "Checking sample rate value: %f\n", sample_rate);
 
     //TODO check below values for (basic) validity
     //uint32_t number_samples_old = buffer[24] + buffer[25]*(0xFF+1) +buffer[26]*(0xFFFF+1) + buffer[27]*(0xFFFFFF+1);
@@ -221,7 +237,7 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     //uint32_t CRC_old = buffer[28] + buffer[29]*(0xFF+1) +buffer[30]*(0xFFFF+1) + buffer[31]*(0xFFFFFF+1);
     uint32_t CRC = ((uint8_t)buffer[28]) | ((uint8_t)buffer[29] << 8) | ((uint8_t)buffer[30] << 16) | ((uint8_t)buffer[31]) << 24 ;
     //TODO Use libmseed to verify the CRC value
-    ms_log(0, "*TODO* Checking CRC value: %d\n",CRC);
+    ms_log(0, "*TODO* Checking CRC value: 0x%0X\n",CRC);
 
     uint8_t dataPubVersion = (uint8_t)buffer[32];
     *identifier_len = (uint8_t)buffer[33];

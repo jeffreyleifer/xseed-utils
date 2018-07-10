@@ -18,7 +18,7 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
 {
 
 
-
+    int ierr;
     bool answer = true;
     char *buffer = (char *) calloc(payload_len +1, sizeof(char));
 
@@ -73,9 +73,26 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
 
         //TODO get status message
         if (msr->formatversion == 3)
-            ms_parse_raw3 (msr->record, msr->reclen, ppackets);
+        {
+            ierr = ms_parse_raw3 (msr->record, msr->reclen, ppackets);
+            if(ierr > 0)
+            {
+                ms_log(2,"Error: Format 3 payload parsing failed. ms_parse_raw3 returned: %d", ierr);
+                answer = false;
+            }
+        }
         else
-            ms_parse_raw2 (msr->record, msr->reclen, ppackets, -1);
+        {
+            ms_log(2,"Error: Format version not version 3, read as version: %d",msr->formatversion);
+            ms_log(2,"Attepting to parse as format 2");
+            ierr = ms_parse_raw2 (msr->record, msr->reclen, ppackets, -1);
+            if(ierr > 0)
+            {
+                ms_log(2,"Error: Format 2 payload parsing failed. ms_parse_raw3 returned: %d\", ierr");
+                answer = false;
+            }
+
+        }
 
 
 
@@ -88,6 +105,7 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
             if ((samplesize = ms_samplesize (msr->sampletype)) == 0)
             {
                 ms_log (2, "Unrecognized sample type: '%c'\n", msr->sampletype);
+                answer = false;
             }
             if (msr->sampletype == 'a')
             {
@@ -136,18 +154,17 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
                         }
                     }
                     ms_log (0, "\n");
-
-                    /* If only printing the first 6 samples break out here */
-//                    if (printdata == 1)
-//                        break;
                 }
+        } else // if numsamples is <= 0
+        {
+           ms_log(0,"No samples found, Num samples = %d", msr->numsamples);
         }
     }
 
 
 
-    ms_log (0, "---Finished Data Payload Verification\n");
-    return true;
+    ms_log (0, "---Completed Data Payload Verification---\n");
+    return answer;
 
 
     //return answer;

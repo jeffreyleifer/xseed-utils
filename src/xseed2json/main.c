@@ -3,13 +3,14 @@
 #include <parson.h>
 
 
+
+//Required to be global, ms3_readmsr has memory issues if it's a local variable
 MS3Record *msr;
 
 int main(int argc, char **argv)
 {
 
     JSON_Status ierr;
-
     JSON_Value *val = NULL;
     JSON_Object *jsonObj = NULL;
     JSON_Value *extraVal = NULL;
@@ -17,18 +18,6 @@ int main(int argc, char **argv)
     char times[25];
     char hex[10];
     char b;
-/***************************************************************************
- * msr3_print:
- *
- * Prints header values in an MS3Record struct.
- *
- * The value of details functions as follows:
- *  0 = print a single summary line
- *  1 = print most details of header
- * >1 = print all details of header and extra headers if present
- *
- ***************************************************************************/
-
 
 
 
