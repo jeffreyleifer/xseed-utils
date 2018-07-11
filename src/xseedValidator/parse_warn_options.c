@@ -34,6 +34,14 @@ bool parse_warn_options(struct warn_options_s *warn_options, char * string_parse
         {
             warn_options->treat_as_errors = true;
         }
+        if (0 == strncmp("skip-header", flag, strlen("skip-header")))
+        {
+            warn_options->ignore_header = true;
+        }
+        if (0 == strncmp("skip-header", flag, strlen("skip-header")))
+        {
+            warn_options->warn_extra_headers = true;
+        }
         else
         {
             bad_option = true;

@@ -51,10 +51,35 @@ All length values are specified in bytes, which are assumed to be 8-bits in leng
 ​*/
 
 
-//TODO test for big endian
-bool check_header(struct warn_options_s *options, FILE *input_file, long file_len, long *file_pos, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt)
+
+
+
+
+/*! @brief Check header for valid values
+ *
+ *  @param[in] options -W cmd line warn options (currently not implemented)
+ *  @param[in] input file pointer to miniSEED file
+ *  @param[in] file_len overall binary length
+ *  @param[in,out] file_pos pointer to current position in the file
+ *  @param[out] identifier_len
+ *  @param[out] extra_header_len
+ *  @param[out] payload_len
+ *
+ *  @todo handle big endian case
+ *
+ */bool check_header(struct warn_options_s *options, FILE *input_file, long file_len, long *file_pos, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt)
 {
 
+
+    bool is_big_emdian = ms_bigendianhost();
+    if(is_big_emdian)
+    {
+
+        //TODO change header parsing to be endian agnostic
+        printf("Warning: Host is big endian\n");
+    }
+
+    bool header_valid = true;
     //prime buffer
     char buffer[XSEED_STATIC_HEADER_LEN];
 
@@ -64,21 +89,18 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     if ( XSEED_STATIC_HEADER_LEN != fread((void *)buffer, sizeof(char), XSEED_STATIC_HEADER_LEN, input_file))
     {
         ms_log (2, "Error: File size mismatch, please double check input record\n");
+        header_valid = false;
     }
-
-
 
     //Check Header flags
     char flag[3];
     flag[0] = (char)buffer[0];
     flag[1] = (char)buffer[1];
-
-
     ms_log (0, "Checking Header Flag value: %c%c\n", flag[0],flag[1]);
-    //if ((char)buffer[0] != 'M' && (char)buffer[1] != 'S')
     if(!(flag[0] == 'M' && flag[1] == 'S'))
     {
-        ms_log(2,"Error: Header Flag Value Incorrect ('MS' currently is the only valid flag)\n");
+        ms_log(2,"Error: Header Flag Value Incorrect ('MS' is only valid flag)\n");
+        header_valid = false;
     }
 
     //Check MS version
@@ -87,18 +109,21 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     if (3 != msVersion)
     {
         ms_log(2,"Error: Header Version Value Incorrect ('3' currently is the only supported MS version)\n");
+        header_valid = false;
     }
 
 
     //Check for valid year range
     // assuming you have read your bytes little-endian
-    //TODO try casting with both uint16_t or uint8_t
+
     uint16_t year = (uint8_t )buffer[8] | (uint8_t)buffer[9] << 8;
     ms_log (0, "Checking Year value: %d\n", year);
     if(year < 0 || year > 65535)
     {
        ms_log(2,"Error : Year value out of range (0-65535)\n");
+       header_valid = false;
     }
+    //TODO Warn for future data
 
 
     //Check for Valid Day-of-Year
@@ -107,14 +132,12 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     ms_log (0, "Checking Day of Year value: %d\n", doy);
     if (366 < doy || 1 > doy)
     {
-        printf("");
+
         ms_log (2, "Error, Day Of Year value out of range (1-366)\n");
+        header_valid = false;
     }
     /*  Dylans way
      * //uint16_t doy = buffer[10] + (buffer[11]*(256)
-    uint16_t days;
-     My way
-    days = (uint8_t )buffer[10] | (uint16_t)buffer[11] << 8;
     */
 
 
@@ -124,6 +147,7 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     if ( hours < 0 || hours > 23)
     {
         ms_log (2, "Error, Hours value out of range (0-23)\n");
+        header_valid = false;
     }
 
     //Check for Valid min rage
@@ -132,6 +156,7 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     if ( mins < 0 || mins > 59)
     {
         ms_log (2, "Error, Mins value out of range (0-59)\n");
+        header_valid = false;
     }
 
     //Check for seconds range
@@ -140,12 +165,12 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
     if ( secs < 0 || secs > 60 )
     {
         ms_log (2, "Error, Secs value out of range (1-366)\n");
+        header_valid = false;
     }
 
 
     //Dylans way
     //  uint32_t nanoseconds = buffer[12] + buffer[13]*(0xFF+1) +buffer[14]*(0xFFFF+1) + buffer[15]*(0xFFFFFF+1);
-
     //My way
     // assuming you have read your bytes little-endian
     uint32_t nanoseconds = ((uint8_t)buffer[4] | ((uint8_t)buffer[5] << 8) | ((uint8_t)buffer[6] << 16) | ((uint8_t)buffer[7] << 24));
@@ -155,12 +180,9 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
         /*TODO to many nanoseconds */
     }
 
-
     //Check for Payload type
     uint8_t payload = (uint8_t)buffer[15];
-
     *payload_fmt = payload;
-
     ms_log(0, "Checking Payload Flag: %d\n", payload);
     switch (payload)
     {
@@ -210,6 +232,7 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
             break;
         default:/* invalid payload type */
             ms_log(0, "Error: Payload Type Flag is Invalid!\n");
+            header_valid = false;
             break;
     };
 
@@ -217,42 +240,43 @@ bool check_header(struct warn_options_s *options, FILE *input_file, long file_le
 
     /*convert to float64 */
     double sample_rate;
+    //TODO conviance funtion for parsing buffer, in progress
     //buffer_to_number(buffer+16, sizeof(double), XSEED_DOUBLE, &sample_rate);
 
+
+    //TODO need check for invalid sample rate
     sample_rate = *((double*)((uint8_t*)buffer+16));
     if(sample_rate < 0 )
     {
         sample_rate = sample_rate * (-.01);//TODO ?????
     }
-
-    //sample_rate = (uint64_t)buffer[16] |(uint64_t) buffer[17] << 8 | (uint64_t)buffer[18] << 16 | (uint64_t)buffer[19] << 24 | \
-    (uint64_t)buffer[20] << 32 | (uint64_t)buffer[21] << 40 | (uint64_t)buffer[22] << 48 | (uint64_t)buffer[23] << 56;
     ms_log(0, "Checking sample rate value: %f\n", sample_rate);
 
-    //TODO check below values for (basic) validity
+
+    //TODO need check for invalid number_samples
     //uint32_t number_samples_old = buffer[24] + buffer[25]*(0xFF+1) +buffer[26]*(0xFFFF+1) + buffer[27]*(0xFFFFFF+1);
     uint32_t number_samples = ((uint8_t)buffer[24] | ((uint8_t)buffer[25] << 8) | ((uint8_t)buffer[26] << 16) | ((uint8_t)buffer[27] << 24));
     ms_log(0, "Checking number of samples value: %d\n", number_samples);
 
-    //uint32_t CRC_old = buffer[28] + buffer[29]*(0xFF+1) +buffer[30]*(0xFFFF+1) + buffer[31]*(0xFFFFFF+1);
+    //uint32_t CRC = buffer[28] + buffer[29]*(0xFF+1) +buffer[30]*(0xFFFF+1) + buffer[31]*(0xFFFFFF+1);
     uint32_t CRC = ((uint8_t)buffer[28]) | ((uint8_t)buffer[29] << 8) | ((uint8_t)buffer[30] << 16) | ((uint8_t)buffer[31]) << 24 ;
-    //TODO Use libmseed to verify the CRC value
-    ms_log(0, "*TODO* Checking CRC value: 0x%0X\n",CRC);
+    ms_log(0, "CRC value: 0x%0X\n",CRC);
 
+    //TODO Check for invalid dataPubVersion?
     uint8_t dataPubVersion = (uint8_t)buffer[32];
-    *identifier_len = (uint8_t)buffer[33];
-    ms_log(0, "Checking Data Publication Version value: %d\n",dataPubVersion);
-
-
+    ms_log(0, "Data Publication Version value: %d\n",dataPubVersion);
+    uint8_t identifier_l = (uint8_t)buffer[33];
+    ms_log(0, "Identifier Length value: %d\n",dataPubVersion);
     uint16_t extra_header_l = (uint8_t )buffer[34] | (uint8_t)buffer[35] << 8;
-    ms_log(0, "Checking Extra Header Length value: %d\n",extra_header_l);
+    ms_log(0, "Extra Header Length value: %d\n",extra_header_l);
     uint32_t payload_l = ((uint8_t)buffer[36] | ((uint8_t)buffer[37] << 8) | ((uint8_t)buffer[38] << 16) | ((uint8_t)buffer[39] << 24));
-    ms_log(0, "Checking Payload Length value: %d\n",payload_l);
+    ms_log(0, "Payload Length value: %d\n",payload_l);
 
     //assign to output values
     *payload_fmt = payload;
     *extra_header_len =  extra_header_l;
     *payload_len = payload_l;
+    *identifier_len = identifier_l;
 
-    return true;
+    return header_valid;
 }

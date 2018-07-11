@@ -11,7 +11,8 @@
 #include <time.h>
 
 #include <libmseed.h>
-
+#include <unpack.h>
+#include <mseedformat.h>
 
 
 bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payload_len, uint8_t payload_fmt, char* file_name)
@@ -19,15 +20,16 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
 
 
     int ierr;
+
+
+    //TODO incomplete, solution to verify data payload without libmseed functions
     bool answer = true;
     char *buffer = (char *) calloc(payload_len +1, sizeof(char));
-
     if (payload_len > fread(buffer, sizeof(char), payload_len, input))
     {
+        ms_log(2,"Error: failed to read record data payload into buffer");
         answer = false;
     }
-
-//TODO incomplete, solution to verify data payload without libmseed functions
 #if 0
 
     switch (payload_fmt)
@@ -59,36 +61,52 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
     }
 
 
+    //Solution using libmseed builtin functions to:
+    //unpack data payload, check CRC,
     ms_log (0, "---Started Data Payload Verification\n");
    // testFile (file_name,0, NULL);
-   int ppackets =1;
+   int verbose = 1;
     //Here we decode and check using libmseed's functions
     MS3Record *msr = NULL;
+    MS3Record *msrOut = NULL;
 
     int retcode;
+    uint32_t flags;
+
+    flags |= MSF_UNPACKDATA;
+    flags |= MSF_VALIDATECRC;
 
     while ((ms3_readmsr (&msr, file_name, 0, NULL, 0, 3) == MS_NOERROR ))
     {
-         msr3_print (msr, ppackets);
+         //msr3_print (msr, ppackets);
 
         //TODO get status message
         if (msr->formatversion == 3)
         {
-            ierr = ms_parse_raw3 (msr->record, msr->reclen, ppackets);
-            if(ierr > 0)
+            ms_log (0, "Unpacking data for verification\n");
+            ierr = msr3_unpack_mseed3(msr->record, msr->reclen,&msrOut, flags, verbose);
+            //ierr = msr3_parse(msr->record, msr->reclen,&msrOut, flags, ppackets);
+            //ierr = ms_parse_raw3 (msr->record, msr->reclen, ppackets);
+            if(ierr != MS_NOERROR)
             {
-                ms_log(2,"Error: Format 3 payload parsing failed. ms_parse_raw3 returned: %d", ierr);
+                //TODO more verbose error output
+                ms_log(2,"Error: Format 3 payload parsing failed. ms_unpack_mseed3 returned: %d", ierr);
                 answer = false;
+            } else
+            {
+
+                ms_log(0,"Data unpacked and verified successfully");
+                answer = true;
             }
         }
         else
         {
             ms_log(2,"Error: Format version not version 3, read as version: %d",msr->formatversion);
             ms_log(2,"Attepting to parse as format 2");
-            ierr = ms_parse_raw2 (msr->record, msr->reclen, ppackets, -1);
+            ierr = msr3_unpack_mseed2 (msr->record, msr->reclen,&msrOut, flags, verbose);
             if(ierr > 0)
             {
-                ms_log(2,"Error: Format 2 payload parsing failed. ms_parse_raw3 returned: %d\", ierr");
+                ms_log(2,"Error: Format 2 payload parsing failed. ms_unpack_mseed2 returned: %d\", ierr");
                 answer = false;
             }
 
@@ -96,7 +114,7 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
 
 
 
-        if (msr->numsamples > 0)
+        if (msrOut->numsamples > 0)
         {
             int line, col, cnt, samplesize;
             int lines = (msr->numsamples / 6) + 1;
@@ -157,7 +175,7 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
                 }
         } else // if numsamples is <= 0
         {
-           ms_log(0,"No samples found, Num samples = %d", msr->numsamples);
+           ms_log(0,"No samples found, Num samples = %d\n", msr->numsamples);
         }
     }
 

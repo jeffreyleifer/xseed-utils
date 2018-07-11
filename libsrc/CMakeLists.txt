@@ -114,8 +114,8 @@ IF (WJELEMENT_BUILD)
     SET(WJELEMENT_INCLUDE_DIRS ${source_dir}/include PARENT_SCOPE)
 
     #HACK!!! TODO remove before pushing
-    #SET(WJELEMENT_LIBRARIES /home/jeff/CLionProjects/xseed-utils/libsrc/WJELEMENT_LIBRARY-prefix/src/WJELEMENT_LIBRARY-build/lib)
-    #SET(WJELEMENT_INCLUDE_DIRS /home/jeff/CLionProjects/xseed-utils/libsrc/WJELEMENT_LIBRARY-prefix/src/WJELEMENT_LIBRARY-build/include)
+    SET(WJELEMENT_LIBRARIES /home/jeff/CLionProjects/xseed-utils/libsrc/WJELEMENT_LIBRARY-prefix/src/WJELEMENT_LIBRARY-build/lib)
+    SET(WJELEMENT_INCLUDE_DIRS /home/jeff/CLionProjects/xseed-utils/libsrc/WJELEMENT_LIBRARY-prefix/src/WJELEMENT_LIBRARY-build/include)
 
     MESSAGE(STATUS ${WJELEMENT_INCLUDE_DIRS})
     MESSAGE(STATUS ${WJELEMENT_LIBRARIES})

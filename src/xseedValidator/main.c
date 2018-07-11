@@ -15,6 +15,10 @@
 #include <getopt.h>
 #endif
 
+
+
+
+//CMD line option structure
 static const struct xseed_option_s args[] = {
     {'h',    "help", "Usage", NULL, NO_OPTARG},
     {'f',    "file", "File to validate", NULL, MANDATORY_OPTARG},
@@ -23,8 +27,13 @@ static const struct xseed_option_s args[] = {
     {'W',      NULL, "Warning flag", NULL, MANDATORY_OPTARG},
     {  0,         0, 0, 0, 0}};
 
+
+//Validator Main
 int main(int argc, char **argv)
 {
+
+
+    //vars for store command line options/args
     char *short_opt_string = NULL;
     struct option *long_opt_array = NULL;
     int opt;
@@ -34,10 +43,14 @@ int main(int argc, char **argv)
     unsigned char display_usage = 0;
     char * schema_file_name =NULL;
 
+    //For warning options - not used TODO get working
     memset(warn_options, 0, sizeof(struct warn_options_s));
 
+    //parse command line args
     xseed_get_short_getopt_string (&short_opt_string, args);
     xseed_get_long_getopt_array(&long_opt_array, args);
+
+    //Loop through options
     int longindex;
     while(-1 != (opt=getopt_long(argc, argv, short_opt_string, long_opt_array, &longindex)))
     {
@@ -62,6 +75,7 @@ int main(int argc, char **argv)
                 break;
             case 'h':
                 display_usage =1;
+                break;
             case 'j':
                 schema_file_name = strndup(optarg, 1024);
                 break;
@@ -84,30 +98,28 @@ int main(int argc, char **argv)
     if (!xseed_file_exists(file_name))
     {
         //exit
-        printf("File Not Found! %s",file_name);
+        printf("Error reading file: %s, File Not Found! \n",file_name);
         return EXIT_FAILURE;
     }
 
-//
-    MS3Record *msr = NULL;
-//
-      int retcode;
-//
-     while ((ms3_readmsr (&msr, file_name, 0, NULL, 0, 3) == MS_NOERROR ))
-    {
-//      /* Do something with the record here, e.g. print */
-      msr3_print (msr, 3);
-    }
 
-
-
-    // Open file
+    // Open ms file as binary
     FILE *file = NULL;
     file = fopen(file_name, "r");
-    // run tests
+    // run verification tests
     bool valid = check_file(warn_options, file, schema_file_name,file_name);
     fclose(file);
-    
+
+
+    //Final program output
+    if(valid)
+    {
+        printf("xseedValidator SUCCESS, the file %s VALID miniSEEDv3",file_name);
+    } else
+    {
+        printf("xseedValidator FAILED, the file %s NOT VALID miniSEEDv3 ",file_name);
+    }
+
     if (file_name)
     {
         free(file_name);
@@ -116,5 +128,8 @@ int main(int argc, char **argv)
     {
         free(schema_file_name);
     }
+
+
+
     return valid ? EXIT_SUCCESS : EXIT_FAILURE;
 }
