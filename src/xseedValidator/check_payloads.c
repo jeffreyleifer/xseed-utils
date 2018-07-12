@@ -63,7 +63,7 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
     //Solution using libmseed builtin functions to:
     //TODO make theses a command line option
     bool print_data = true;
-    int verbose = 1;
+    int verbose = 3;
 
     //unpack data payload, check CRC
     ms_log (0, "---Started Data Payload Verification\n");
@@ -79,7 +79,7 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
     flags |= MSF_UNPACKDATA;
     flags |= MSF_VALIDATECRC;
 
-    while ((ms3_readmsr (&msr, file_name, 0, NULL, 0, 3) == MS_NOERROR ))
+    while ((ms3_readmsr (&msr, file_name, 0, NULL, 0, verbose) == MS_NOERROR ))
     {
          //msr3_print (msr, verbose);
 
@@ -97,9 +97,7 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
                 answer = false;
             } else
             {
-
-                ms_log(0,"Data unpacked successfull\n");
-                answer = true;
+                ms_log(0,"Data unpacked successfully\n");
             }
         }
         else
@@ -154,29 +152,28 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
                 }
             }
             else
-                for (cnt = 0, line = 0; line < lines; line++)
-                {
-                    for (col = 0; col < 6; col++)
-                    {
-                        if (cnt < msrOut->numsamples)
-                        {
-                            sptr = (char *)msrOut->datasamples + (cnt * samplesize);
+            {
+                for (cnt = 0, line = 0; line < lines; line++) {
+                    for (col = 0; col < 6; col++) {
+                        if (cnt < msrOut->numsamples) {
+                            sptr = (char *) msrOut->datasamples + (cnt * samplesize);
 
                             if (msrOut->sampletype == 'i')
-                                ms_log (0, "%10d  ", *(int32_t *)sptr);
+                                ms_log(0, "%10d  ", *(int32_t *) sptr);
 
                             else if (msrOut->sampletype == 'f')
-                                ms_log (0, "%10.8g  ", *(float *)sptr);
+                                ms_log(0, "%10.8g  ", *(float *) sptr);
 
                             else if (msrOut->sampletype == 'd')
-                                ms_log (0, "%10.10g  ", *(double *)sptr);
+                                ms_log(0, "%10.10g  ", *(double *) sptr);
 
                             cnt++;
                         }
                     }
-                    ms_log (0, "\n");
+                    ms_log(0, "\n");
                 }
-        } else // if numsamples is <= 0
+            }
+        } else if(!msrOut->numsamples > 0) // if numsamples is <= 0 // if numsamples is <= 0
         {
            ms_log(0,"No samples found, Num samples = %d\n", msrOut->numsamples);
         }
