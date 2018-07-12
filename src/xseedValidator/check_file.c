@@ -35,6 +35,16 @@ bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_
 
 
         valid_file = check_header(options, input, file_len, &file_pos, &identifier_len, &extra_header_len, &payload_len, &payload_fmt);
+
+        if(valid_file)
+        {
+            printf("Header is valid!\n");
+        }
+        else
+        {
+            printf("Error! Header is not valid!\n");
+        }
+
         valid_file = check_identifier(options, input, identifier_len);
         valid_file = check_extra_headers(options, schema_file_name, input, extra_header_len);
         valid_file = check_payloads(options, input, payload_len, payload_fmt,file_name);
