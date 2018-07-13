@@ -43,10 +43,12 @@ static void print_stderr (char *message);
 static void usage (void);
 static void term_handler (int sig);
 
+MS3Record *msr = NULL;
+
 int
 main (int argc, char **argv)
 {
-  MS3Record *msr = 0;
+
   char *rawrec = NULL;
   int retcode;
   int reclen;
@@ -93,47 +95,12 @@ main (int argc, char **argv)
     }
   }
 
-  
-  size_t extra_size = 0;
-  char * extra_buf = NULL;
-  JSON_Value * root_value = NULL;
 
-  if(jsonschema != NULL)
-  {
+    size_t extra_size = 0;
+    char * extra_buf = NULL;
+    char * pretty_json = NULL;
+    JSON_Value * root_value = NULL;
 
-    ms_log(0,"Input JSON schema found, serializing for injection into mseed record\n");
-    root_value = json_parse_file(jsonschema);
-
-    if(verbose==3)
-    {
-      printf("Root element:\n  %s\n",json_serialize_to_string_pretty(root_value));
-    }
-
-    extra_size =  json_serialization_size(root_value);
-
-
-    printf("extra buffer size = %zu\n",extra_size);
-
-    if ((extra_buf = (char *)malloc ((extra_size-1))) == NULL)
-    {
-      ms_log (2, "Cannot allocate memory for extra header buffer\n");
-
-    }
-
-    JSON_Status ierr = json_serialize_to_buffer(root_value, extra_buf, extra_size);
-
-    //Debug
-    //printf("extra buffer:\n%s\n",extra_buf);
-
-    if(ierr == JSONFailure)
-    {
-      ms_log (2, "Cannot serialize json to buffer: %s\n", jsonschema);
-      printf("error code = %d\n",ierr);
-      return 1;
-    }
-
-
-  }
 
   /* Set flag to skip non-data */
   flags |= MSF_SKIPNOTDATA;
@@ -198,6 +165,50 @@ main (int argc, char **argv)
         break;
       }
 
+
+
+
+        if(jsonschema != NULL)
+        {
+
+            ms_log(0,"Input JSON schema found, serializing for injection into mseed record\n");
+            root_value = json_parse_file(jsonschema);
+
+
+            if(verbose==3)
+            {
+                pretty_json = json_serialize_to_string_pretty(root_value);
+                printf("Root element:\n  %s\n",pretty_json);
+                json_free_serialized_string(pretty_json);
+            }
+
+
+            extra_size =  json_serialization_size(root_value);
+
+
+            printf("extra buffer size = %zu\n",extra_size);
+
+            if ((extra_buf = (char *)malloc ((extra_size))) == NULL)
+            {
+                ms_log (2, "Cannot allocate memory for extra header buffer\n");
+
+            }
+
+            JSON_Status ierr = json_serialize_to_buffer(root_value, extra_buf, extra_size);
+
+            //Debug
+            //printf("extra buffer:\n%s\n",extra_buf);
+
+            if(ierr == JSONFailure)
+            {
+                ms_log (2, "Cannot serialize json to buffer: %s\n", jsonschema);
+                printf("error code = %d\n",ierr);
+                return 1;
+            }
+
+
+        }
+
       if(jsonschema)
       {
         msr->extralength = (uint16_t)(extra_size-1);
@@ -243,8 +254,6 @@ main (int argc, char **argv)
 
 
 
-
-
   /* Make sure everything is cleaned up */
   ms3_readmsr (&msr, NULL, NULL, NULL, 0, 0);
 
@@ -252,10 +261,6 @@ main (int argc, char **argv)
   {
       json_value_free(root_value);
   }
-//  if(extra_buf)
-//  {
-//      free(extra_buf);
-//  }
 
   if (rawrec)
     free (rawrec);
