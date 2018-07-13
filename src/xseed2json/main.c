@@ -5,8 +5,8 @@
 #include <stdbool.h>
 
 
-//Required to be global, ms3_readmsr was having memory issues if it's a local variable
-MS3Record *msr = NULL;
+
+//Required to be global, ms3_readmsr having memory issues if it's a local variable
 MS3Record *msrOut = NULL;
 
 int main(int argc, char **argv)
@@ -19,16 +19,21 @@ int main(int argc, char **argv)
         //for ci TODO remove
         return EXIT_SUCCESS;
     }
-    char * filename = argv[1];
 
+
+    char * filename = argv[1];
     //TODO make args
     int verbose = 3;
     bool print_data = true;
+
+    MS3Record *msr = NULL;
+
 
     JSON_Status ierr;
     JSON_Value *val = NULL;
     JSON_Object *jsonObj = NULL;
     JSON_Value *extraVal = NULL;
+    JSON_Array *payload_arr = NULL;
 
     char times[25];
     char hex[10];
@@ -164,14 +169,11 @@ while ((ms3_readmsr (&msr, filename, 0, NULL, 0, verbose) == MS_NOERROR ))
         }
 
 
-//TODO FIgure out best way to put data into json
-#if 0
+
     if(print_data) {
         if (msr->formatversion == 3) {
             ms_log(0, "Unpacking data for verification\n");
             ierr = msr3_unpack_mseed3(msr->record, msr->reclen, &msrOut, flags, verbose);
-            //ierr = msr3_parse(msr->record, msr->reclen,&msrOut, flags, ppackets);
-            //ierr = ms_parse_raw3 (msr->record, msr->reclen, ppackets);
             if (ierr != MS_NOERROR) {
                 //TODO more verbose error output
                 ms_log(2, "Error: Format 3 payload parsing failed. ms_unpack_mseed3 returned: %d\n", ierr);
@@ -213,31 +215,26 @@ while ((ms3_readmsr (&msr, filename, 0, NULL, 0, verbose) == MS_NOERROR ))
 
             } else
                 {
-                    //
-                    int32_t arr_int[msrOut->numsamples];
-                    float arr_float[msrOut->numsamples];
-                    double arr_double[msrOut->numsamples];
-                    char arr_out[msrOut->numsamples];
+
+                    json_object_set_value(jsonObj, "Payload", json_value_init_array());
+                    payload_arr = json_object_get_array(jsonObj, "Payload");
 
                     for (int i = 0; i < msrOut->numsamples; i++)
                     {
                         sptr = (char *) msrOut->datasamples + (i * samplesize);
 
-                        if (msrOut->sampletype == 'i') {
-                            arr_int[i] = *(int32_t *) sptr;
-                            arr_out[i] = arr_int[i] + '0';
+                        if (msrOut->sampletype == 'i')
+                        {
+                            json_array_append_number(payload_arr,*(int32_t *) sptr);
                         } else if (msrOut->sampletype == 'f')
                         {
-                            arr_float[i] = *(float *) sptr;
-                            arr_out[i] = arr_float[i] + '0';
-                        } else if (msrOut->sampletype == 'd') {
-                            arr_double[i] = *(double *) sptr;
-                            arr_out[i] = arr_double[i] + '0';
+                            json_array_append_number(payload_arr,*(float *) sptr);
+                        } else if (msrOut->sampletype == 'd')
+                        {
+                            json_array_append_number(payload_arr,*(double *) sptr);
                         }
 
                     }
-
-                    ierr = json_object_set_string(jsonObj, "payload", arr_out);
 
                     if (ierr == JSONFailure)
                     {
@@ -249,12 +246,15 @@ while ((ms3_readmsr (&msr, filename, 0, NULL, 0, verbose) == MS_NOERROR ))
             ms_log(2, "No samples found, Num samples = %d\n", msrOut->numsamples);
         }
     }
-#endif
+
 
     char * full_string = json_serialize_to_string_pretty(val);
     printf("%s",full_string);
     json_free_serialized_string(full_string);
+    json_array_clear(payload_arr);
     json_value_free(val);
+
+
 
 }
 

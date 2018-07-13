@@ -6,7 +6,6 @@
 
 
 //Required to be global, ms3_readmsr was having memory issues if it's a local variable
-MS3Record *msr = NULL;
 MS3Record *msrOut = NULL;
 
 int main(int argc, char **argv)
@@ -21,7 +20,7 @@ int main(int argc, char **argv)
         return EXIT_SUCCESS;
     }
 
-
+    MS3Record *msr = NULL;
     int verbose = 3;
     bool print_data = true;
     int retcode;
