@@ -211,35 +211,39 @@ while ((ms3_readmsr (&msr, filename, 0, NULL, 0, verbose) == MS_NOERROR ))
                 }
 
 
-            } else {
-                int32_t arr_int[msrOut->numsamples];
-                float arr_float[msrOut->numsamples];
-                double arr_double[msrOut->numsamples];
-                char arr_out[msrOut->numsamples];
+            } else
+                {
+                    //
+                    int32_t arr_int[msrOut->numsamples];
+                    float arr_float[msrOut->numsamples];
+                    double arr_double[msrOut->numsamples];
+                    char arr_out[msrOut->numsamples];
 
-                for (int i = 0; i < msrOut->numsamples; i++) {
-                    sptr = (char *) msrOut->datasamples + (i * samplesize);
-
-                    if (msrOut->sampletype == 'i') {
-                        arr_int[i] = *(int32_t *) sptr;
-                        arr_out[i] = arr_int[i] + '0';
-                    } else if (msrOut->sampletype == 'f')
+                    for (int i = 0; i < msrOut->numsamples; i++)
                     {
-                        arr_float[i] = *(float *) sptr;
-                        arr_out[i] = arr_float[i] + '0';
-                    } else if (msrOut->sampletype == 'd') {
-                        arr_double[i] = *(double *) sptr;
-                        arr_out[i] = arr_double[i] + '0';
+                        sptr = (char *) msrOut->datasamples + (i * samplesize);
+
+                        if (msrOut->sampletype == 'i') {
+                            arr_int[i] = *(int32_t *) sptr;
+                            arr_out[i] = arr_int[i] + '0';
+                        } else if (msrOut->sampletype == 'f')
+                        {
+                            arr_float[i] = *(float *) sptr;
+                            arr_out[i] = arr_float[i] + '0';
+                        } else if (msrOut->sampletype == 'd') {
+                            arr_double[i] = *(double *) sptr;
+                            arr_out[i] = arr_double[i] + '0';
+                        }
+
                     }
 
-                }
+                    ierr = json_object_set_string(jsonObj, "payload", arr_out);
 
-                ierr = json_object_set_string(jsonObj, "payload", arr_out);
-
-                if (ierr == JSONFailure) {
-                    ms_log(2, "Something went wrong parsing to JSON : payload (numeric)");
+                    if (ierr == JSONFailure)
+                    {
+                        ms_log(2, "Something went wrong parsing to JSON : payload (numeric)");
+                    }
                 }
-            }
         } else if (!msrOut->numsamples > 0) // if numsamples is <= 0
         {
             ms_log(2, "No samples found, Num samples = %d\n", msrOut->numsamples);
