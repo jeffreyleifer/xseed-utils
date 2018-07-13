@@ -61,3 +61,8 @@ client:
 category_order:
     - 'Installation'
     - 'Validator'
+    - 'xSEED to Text'
+    - 'xSEED to JSON'
+    - 'xSEED to Converter'
+    - 'xSEED Reference Sets'
+  

@@ -1,7 +1,7 @@
 ---
 layout: documentation
-category: Validator
+category: xSEED to Converter
 order: 1
 title: Introduction
 ---
-This is a placeholder
+
