@@ -95,20 +95,23 @@ main (int argc, char **argv)
 
 //  JSON_Array *commits;
 //  JSON_Object *commit;
+ 
+size_t extra_size = 0;
+char * extra_buf = NULL;
+ 
+if(jsonschema)
+{
+    JSON_Value * root_value = json_parse_file(jsonschema);
   
-
- JSON_Value * root_value = json_parse_file(jsonschema);
-  
- printf("Root element:\n  %s",json_serialize_to_string_pretty(root_value));
+    printf("Root element:\n  %s\n",json_serialize_to_string_pretty(root_value));
 
  //json_value_free(root_value);
 
   
-  size_t extra_size =  json_serialization_size(root_value);   
+  extra_size =  json_serialization_size(root_value);   
 
-  printf("extra size = %zu",extra_size);
+  printf("extra size = %zu\n",extra_size);
   
-  char*  extra_buf;
   if ((extra_buf = (char *)malloc ((extra_size-1))) == NULL)
       {
         ms_log (2, "Cannot allocate memory for extra header buffer\n");
@@ -116,7 +119,7 @@ main (int argc, char **argv)
       }
 
   JSON_Status ierr = json_serialize_to_buffer(root_value, extra_buf, extra_size);
-  printf("error code = %d",ierr);
+  printf("error code = %d\n",ierr);
 
   printf("extra_buf:\n%s\n",extra_buf);
   if(ierr == JSONFailure)
@@ -128,8 +131,7 @@ main (int argc, char **argv)
   //TODO cleanup
   //json_free_serialized_string()
   //json_value_free
-
-
+}
 
   /* Set flag to skip non-data */
   flags |= MSF_SKIPNOTDATA;
@@ -166,14 +168,14 @@ main (int argc, char **argv)
 
       // TODO repack could determine the number of samples for INT, FLOAT32 and FLOAT64 and trim payload length
 
-      ms_log (0, "b4 assign\n");
+   if(jsonschema)
+{
       msr->extralength = (uint16_t)(extra_size-1);
       msr->extra = extra_buf;
       int32_t recl = msr->reclen;
       recl = recl + (int32_t)extra_size;
       msr->reclen = recl;
-      ms_log (0, "after assign\n");
-      //lastrecord += extra_size;
+}
 
       reclen = msr3_repack_mseed3 (msr, rawrec, MAXRECLEN, verbose);
 
@@ -185,7 +187,6 @@ main (int argc, char **argv)
         ms_log (2, "%s: Cannot repack record\n");
         break;
       }
-
 
 
 
@@ -496,7 +497,10 @@ parameter_proc (int argcount, char **argvec)
 
 
    ms_log (1, "input file is %s\n", inputfile);
+
+if(jsonschema)
    ms_log (1, "JSON file is %s\n", jsonschema);
+
   /* Make sure an inputfile was specified */
   if (!inputfile)
   {

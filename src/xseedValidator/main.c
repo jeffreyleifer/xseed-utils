@@ -112,12 +112,13 @@ int main(int argc, char **argv)
 
 
     //Final program output
+    //TODO if schema validation fails, this still registers as a success
     if(valid)
     {
-        printf("xseedValidator SUCCESS, the file %s is VALID miniSEEDv3",file_name);
+        printf("xseedValidator SUCCESS, the file %s is VALID miniSEEDv3\n\n",file_name);
     } else
     {
-        printf("xseedValidator FAILED, the file %s is NOT VALID miniSEEDv3 ",file_name);
+        printf("xseedValidator FAILED, the file %s is NOT VALID miniSEEDv3\n\n",file_name);
     }
 
     if (file_name)

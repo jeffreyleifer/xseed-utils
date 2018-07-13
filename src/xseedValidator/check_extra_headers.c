@@ -58,7 +58,7 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
         {
             //Print header to validate
             char *extraHeaderStr = WJEToString(document_element, true);
-            ms_log(0, "Extra header output:\n%s\n\n", extraHeaderStr);
+            printf("Extra header output:\n%s\n\n", extraHeaderStr);
             free(extraHeaderStr);
 
             FILE *schema_file = fopen(schema, "r");
