@@ -26,7 +26,7 @@ static void term_handler (int sig);
 #define VERSION "0.1"
 #define PACKAGE "mseedconvert"
 
-static int8_t verbose = 0; 
+static int8_t verbose = 0;
 static int packreclen = -1;
 static int packencoding = -1;
 static int packversion = 3;
@@ -93,57 +93,57 @@ main (int argc, char **argv)
     }
   }
 
-//  JSON_Array *commits;
-//  JSON_Object *commit;
- 
-size_t extra_size = 0;
-char * extra_buf = NULL;
- 
-if(jsonschema)
-{
-    JSON_Value * root_value = json_parse_file(jsonschema);
   
-    printf("Root element:\n  %s\n",json_serialize_to_string_pretty(root_value));
+  size_t extra_size = 0;
+  char * extra_buf = NULL;
+  JSON_Value * root_value = NULL;
 
- //json_value_free(root_value);
-
-  
-  extra_size =  json_serialization_size(root_value);   
-
-  printf("extra size = %zu\n",extra_size);
-  
-  if ((extra_buf = (char *)malloc ((extra_size-1))) == NULL)
-      {
-        ms_log (2, "Cannot allocate memory for extra header buffer\n");
-        
-      }
-
-  JSON_Status ierr = json_serialize_to_buffer(root_value, extra_buf, extra_size);
-  printf("error code = %d\n",ierr);
-
-  printf("extra_buf:\n%s\n",extra_buf);
-  if(ierr == JSONFailure)
+  if(jsonschema != NULL)
   {
-     ms_log (2, "Cannot serialize json to buffer: %s\n", jsonschema);
- //    return 1;
-  }
 
-  //TODO cleanup
-  //json_free_serialized_string()
-  //json_value_free
-}
+    ms_log(0,"Input JSON schema found, serializing for injection into mseed record\n");
+    root_value = json_parse_file(jsonschema);
+
+    if(verbose==3)
+    {
+      printf("Root element:\n  %s\n",json_serialize_to_string_pretty(root_value));
+    }
+
+    extra_size =  json_serialization_size(root_value);
+
+
+    printf("extra buffer size = %zu\n",extra_size);
+
+    if ((extra_buf = (char *)malloc ((extra_size-1))) == NULL)
+    {
+      ms_log (2, "Cannot allocate memory for extra header buffer\n");
+
+    }
+
+    JSON_Status ierr = json_serialize_to_buffer(root_value, extra_buf, extra_size);
+
+    //Debug
+    //printf("extra buffer:\n%s\n",extra_buf);
+
+    if(ierr == JSONFailure)
+    {
+      ms_log (2, "Cannot serialize json to buffer: %s\n", jsonschema);
+      printf("error code = %d\n",ierr);
+      return 1;
+    }
+
+
+  }
 
   /* Set flag to skip non-data */
   flags |= MSF_SKIPNOTDATA;
 
   /* Loop over the input file */
   while((retcode = ms3_readmsr (&msr, inputfile, NULL, &lastrecord,
-                                 flags, verbose)) == MS_NOERROR)
+                                flags, verbose)) == MS_NOERROR)
   {
     if (verbose >= 1)
       msr3_print (msr, verbose - 1);
-
-
 
 
     //TODO the shortcut can only be used for Steim[12], i.e. when encoding is known to be transportable
@@ -154,7 +154,8 @@ if(jsonschema)
     // If the datapayload byte order is known it could be swapped here?
 
     /* Conversion to version 3, if unpacking data is not needed */
-    if (forcerepack == 0 && packversion == 3 &&
+    /* If json extra headers are to be injected, unpack and repack is required */
+    if ((forcerepack == 0 && jsonschema == NULL ) && packversion == 3 &&
         (packencoding < 0 || packencoding == msr->encoding || msr->samplecnt == 0))
     {
       if (!rawrec && (rawrec = (char *)malloc (MAXRECLEN)) == NULL)
@@ -163,24 +164,9 @@ if(jsonschema)
         break;
       }
 
-
-
-
       // TODO repack could determine the number of samples for INT, FLOAT32 and FLOAT64 and trim payload length
 
-   if(jsonschema)
-{
-      msr->extralength = (uint16_t)(extra_size-1);
-      msr->extra = extra_buf;
-      int32_t recl = msr->reclen;
-      recl = recl + (int32_t)extra_size;
-      msr->reclen = recl;
-}
-
       reclen = msr3_repack_mseed3 (msr, rawrec, MAXRECLEN, verbose);
-
-
-      ms_log (0, "reclen: %d\n",reclen);
 
       if (reclen < 0)
       {
@@ -189,17 +175,12 @@ if(jsonschema)
       }
 
 
-
       record_handler (rawrec, reclen, NULL);
-
       packedsamples = msr->samplecnt;
       packedrecords = 1;
 
-
-
-
     }
-    /* Otherwise, unpack samples and repack record */
+      /* Otherwise, unpack samples and repack record */
     else
     {
       msr->numsamples = msr3_unpack_data (msr, verbose);
@@ -217,6 +198,16 @@ if(jsonschema)
         break;
       }
 
+      if(jsonschema)
+      {
+        msr->extralength = (uint16_t)(extra_size-1);
+        msr->extra = extra_buf;
+        int32_t recl = msr->reclen;
+        recl = recl + (int32_t)extra_size;
+        msr->reclen = recl;
+      }
+
+
       msr->formatversion = packversion;
 
       if (packreclen >= 0)
@@ -225,10 +216,8 @@ if(jsonschema)
         msr->reclen = MAXRECLEN;
 
       packedrecords = msr3_pack (msr, &record_handler, NULL, &packedsamples, MSF_FLUSHDATA, verbose);
+
     }
-
-
-
 
 
 
@@ -240,7 +229,7 @@ if(jsonschema)
 
     totalpackedrecords += packedrecords;
     totalpackedsamples += packedsamples;
-   
+
   }
 
 
@@ -252,11 +241,21 @@ if(jsonschema)
     ms_log (0, "Packed %" PRIu64 " samples into %" PRIu64 " records\n",
             totalpackedsamples, totalpackedrecords);
 
-  //json_value_free(root_value);
+
+
 
 
   /* Make sure everything is cleaned up */
   ms3_readmsr (&msr, NULL, NULL, NULL, 0, 0);
+
+  if(root_value)
+  {
+      json_value_free(root_value);
+  }
+//  if(extra_buf)
+//  {
+//      free(extra_buf);
+//  }
 
   if (rawrec)
     free (rawrec);
@@ -292,24 +291,24 @@ convertsamples (MS3Record *msr, int packencoding)
   /* Determine sample type needed for pack encoding */
   switch (packencoding)
   {
-  case DE_ASCII:
-    encodingtype = 'a';
-    break;
-  case DE_INT16:
-  case DE_INT32:
-  case DE_STEIM1:
-  case DE_STEIM2:
-    encodingtype = 'i';
-    break;
-  case DE_FLOAT32:
-    encodingtype = 'f';
-    break;
-  case DE_FLOAT64:
-    encodingtype = 'd';
-    break;
-  default:
-    encodingtype = msr->encoding;
-    break;
+    case DE_ASCII:
+      encodingtype = 'a';
+          break;
+    case DE_INT16:
+    case DE_INT32:
+    case DE_STEIM1:
+    case DE_STEIM2:
+      encodingtype = 'i';
+          break;
+    case DE_FLOAT32:
+      encodingtype = 'f';
+          break;
+    case DE_FLOAT64:
+      encodingtype = 'd';
+          break;
+    default:
+      encodingtype = msr->encoding;
+          break;
   }
 
   idata = (int32_t *)msr->datasamples;
@@ -325,7 +324,7 @@ convertsamples (MS3Record *msr, int packencoding)
       return -1;
     }
 
-    /* Convert to integers */
+      /* Convert to integers */
     else if (encodingtype == 'i')
     {
       if (msr->sampletype == 'f') /* Convert floats to integers with simple rounding */
@@ -369,7 +368,7 @@ convertsamples (MS3Record *msr, int packencoding)
       msr->sampletype = 'i';
     }
 
-    /* Convert to floats */
+      /* Convert to floats */
     else if (encodingtype == 'f')
     {
       if (msr->sampletype == 'i') /* Convert integers to floats */
@@ -393,7 +392,7 @@ convertsamples (MS3Record *msr, int packencoding)
       msr->sampletype = 'f';
     }
 
-    /* Convert to doubles */
+      /* Convert to doubles */
     else if (encodingtype == 'd')
     {
       if (!(ddata = (double *)malloc ((size_t) (msr->numsamples * sizeof (double)))))
@@ -472,7 +471,7 @@ parameter_proc (int argcount, char **argvec)
     }
     else if (strcmp (argvec[optind], "-j") == 0)
     {
-        jsonschema = argvec[++optind];
+      jsonschema = argvec[++optind];
     }
     else if (strcmp (argvec[optind], "-o") == 0)
     {
@@ -496,10 +495,10 @@ parameter_proc (int argcount, char **argvec)
   }
 
 
-   ms_log (1, "input file is %s\n", inputfile);
+  ms_log (1, "input file is %s\n", inputfile);
 
-if(jsonschema)
-   ms_log (1, "JSON file is %s\n", jsonschema);
+  if(jsonschema)
+    ms_log (1, "JSON file is %s\n", jsonschema);
 
   /* Make sure an inputfile was specified */
   if (!inputfile)
