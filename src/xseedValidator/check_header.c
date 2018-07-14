@@ -77,32 +77,24 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
 
     //read values into buffer, dummy EOF check
     ms_log (0, "---------------------------------------------\n");
-    ms_log (0, "Reading header for verification in little endian format...\n");
+    ms_log (0,"---Starting fixed header verification---\n");
     if ( XSEED_STATIC_HEADER_LEN != fread((void *)buffer, sizeof(char), XSEED_STATIC_HEADER_LEN, input_file))
     {
         ms_log (2, "Error: File size mismatch, please double check input record\n");
         header_valid = false;
     }
 
-    printf("Checking host endianness...");
+    ms_log (0,"Checking host endianness...");
     bool is_big_emdian = ms_bigendianhost();
     if(is_big_emdian)
     {
-        //TODO change header parsing to be endian agnostic
-        printf("host is Big Endian\n");
+        ms_log (0,"host is Big Endian\n");
+        header_valid = parse_header_big_endian(buffer, header_valid, identifier_len, extra_header_len, payload_len, payload_fmt);
+
     } else
     {
-        printf("host is Little Endian\n");
-    }
-
-
-    if(!is_big_emdian)
-    {
-        parse_header_little_endian(buffer, header_valid, identifier_len, extra_header_len, payload_len, payload_fmt);
-    }
-    else
-    {
-        parse_header_big_endian(buffer, header_valid, identifier_len, extra_header_len, payload_len, payload_fmt);
+        ms_log (0,"host is Little Endian\n");
+        header_valid = parse_header_little_endian(buffer, header_valid, identifier_len, extra_header_len, payload_len, payload_fmt);
     }
 
 
@@ -132,11 +124,6 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
         ms_log(2,"Error: Header Version Value Incorrect ('3' currently is the only supported MS version)\n");
         header_valid = false;
     }
-
-
-    //Check for valid year range
-    // assuming you have read your bytes little-endian
-
 
 
     uint16_t year = (uint8_t )buffer[8] | (uint8_t)buffer[9] << 8;
@@ -195,7 +182,7 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
 
     //Dylans way
     //  uint32_t nanoseconds = buffer[12] + buffer[13]*(0xFF+1) +buffer[14]*(0xFFFF+1) + buffer[15]*(0xFFFFFF+1);
-    //My way
+
     // assuming you have read your bytes little-endian
     uint32_t nanoseconds = ((uint8_t)buffer[4] | ((uint8_t)buffer[5] << 8) | ((uint8_t)buffer[6] << 16) | ((uint8_t)buffer[7] << 24));
     ms_log (0, "Checking Nanoseconds value: %d\n", nanoseconds);
@@ -264,7 +251,7 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
 
     /*convert to float64 */
     double sample_rate;
-    //TODO conviance funtion for parsing buffer, in progress
+    //TODO convenience function for parsing buffer, in progress
     //buffer_to_number(buffer+16, sizeof(double), XSEED_DOUBLE, &sample_rate);
 
 
@@ -290,6 +277,8 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
     uint8_t dataPubVersion = (uint8_t)buffer[32];
     ms_log(0, "Data Publication Version value: %d\n",dataPubVersion);
     uint8_t identifier_l = (uint8_t)buffer[33];
+
+    //Get lengths for extra header and payload
     ms_log(0, "Identifier Length value: %d\n",identifier_l);
     uint16_t extra_header_l = (uint8_t )buffer[34] | (uint8_t)buffer[35] << 8;
     ms_log(0, "Extra Header Length value: %d\n",extra_header_l);
@@ -310,7 +299,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
 {
 
 
-//Check Header flags
+   //Check Header flags
     char flag[3];
     flag[0] = (char)buffer[0];
     flag[1] = (char)buffer[1];
@@ -331,11 +320,6 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
     }
 
 
-    //Check for valid year range
-    // assuming you have read your bytes little-endian
-
-
-
     uint16_t year = (uint8_t )buffer[9] | (uint8_t)buffer[8] << 8;
 
     ms_log (0, "Checking Year value: %d\n", year);
@@ -348,7 +332,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
 
 
     //Check for Valid Day-of-Year
-    //assuming you have read your bytes little-endian
+    //assuming you have read your bytes big-endian
     uint16_t doy = (uint8_t )buffer[11] | (uint8_t)buffer[10] << 8;
     ms_log (0, "Checking Day of Year value: %d\n", doy);
     if (366 < doy || 1 > doy)
@@ -393,7 +377,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
     //Dylans way
     //  uint32_t nanoseconds = buffer[12] + buffer[13]*(0xFF+1) +buffer[14]*(0xFFFF+1) + buffer[15]*(0xFFFFFF+1);
     //My way
-    // assuming you have read your bytes little-endian
+    // assuming you have read your bytes big-endian
     uint32_t nanoseconds = ((uint8_t)buffer[7] | ((uint8_t)buffer[6] << 8) | ((uint8_t)buffer[5] << 16) | ((uint8_t)buffer[4] << 24));
     ms_log (0, "Checking Nanoseconds value: %d\n", nanoseconds);
     if (999999999 < nanoseconds)
