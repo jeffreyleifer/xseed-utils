@@ -178,14 +178,10 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
            ms_log(0,"No samples found, Num samples = %d\n", msrOut->numsamples);
         }
     }
-
-
-
+    
     ms_log (0, "---Completed Data Payload Verification---\n");
     return answer;
 
-
-    //return answer;
 }
 
 #if 0
