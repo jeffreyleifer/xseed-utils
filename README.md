@@ -1,5 +1,5 @@
 # XSEED-Utils
-This repository contains utilities to convert and verify the xSEED standard for miniSEED file
+This repository contains utilities to convert and verify the xSEED standard for miniSEED files
 
 ## Install
 run ```cmake .``` on the root directory
