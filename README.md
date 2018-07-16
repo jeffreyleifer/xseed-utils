@@ -2,7 +2,7 @@
 This repository contains utilities to convert and verify the xSEED standard for miniSEED file
 
 ## Install
-run ```cmake .``` at the root repo directory
+run ```cmake .``` on the root directory
 
 then ``make`` -- NOTE: Internet connection required
 
