@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "constants.h"
+#include "array.h"
 int expand_array (void **ptr, int current_len, size_t obj_size)
 {
     int ret_len;

@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <xseed-common/cmd_opt.h>
 #include <xseed-common/files.h>
+#include <xseed-common/xseed_string.h>
+#include <libmseed.h>
 #include "warnings.h"
 #include "validator.h"
 #if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
@@ -13,15 +15,25 @@
 #include <getopt.h>
 #endif
 
+
+
+
+//CMD line option structure
 static const struct xseed_option_s args[] = {
     {'h',    "help", "Usage", NULL, NO_OPTARG},
     {'f',    "file", "File to validate", NULL, MANDATORY_OPTARG},
+    {'j',  "schema", "Json Schemas", NULL, MANDATORY_OPTARG},
     {'v', "verbose", "Verbosity level", NULL, OPTIONAL_OPTARG},
     {'W',      NULL, "Warning flag", NULL, MANDATORY_OPTARG},
     {  0,         0, 0, 0, 0}};
 
+
+//Validator Main
 int main(int argc, char **argv)
 {
+
+
+    //vars for store command line options/args
     char *short_opt_string = NULL;
     struct option *long_opt_array = NULL;
     int opt;
@@ -29,21 +41,24 @@ int main(int argc, char **argv)
     char *file_name = NULL;
     struct warn_options_s warn_options[1];
     unsigned char display_usage = 0;
+    char * schema_file_name =NULL;
 
+    //For warning options - not used TODO get working
     memset(warn_options, 0, sizeof(struct warn_options_s));
 
+    //parse command line args
     xseed_get_short_getopt_string (&short_opt_string, args);
     xseed_get_long_getopt_array(&long_opt_array, args);
+
+    //Loop through options
     int longindex;
     while(-1 != (opt=getopt_long(argc, argv, short_opt_string, long_opt_array, &longindex)))
     {
         switch(opt)
         {
-            int file_name_size;
+            //int file_name_size;
             case 'f':
-                file_name_size = strnlen(optarg, 1024);
-                file_name = (char *)calloc(file_name_size, sizeof(char));
-                memcpy(file_name, optarg, file_name_size);
+                file_name = strndup(optarg, 1024);
                 break;
             case 'v':
                 if (0 == optarg )
@@ -60,6 +75,10 @@ int main(int argc, char **argv)
                 break;
             case 'h':
                 display_usage =1;
+                break;
+            case 'j':
+                schema_file_name = strndup(optarg, 1024);
+                break;
             default:
                 display_usage++;
                 break;
@@ -79,13 +98,39 @@ int main(int argc, char **argv)
     if (!xseed_file_exists(file_name))
     {
         //exit
+        printf("Error reading file: %s, File Not Found! \n",file_name);
         return EXIT_FAILURE;
     }
-    // Open file
+
+
+    // Open ms file as binary
     FILE *file = NULL;
     file = fopen(file_name, "r");
-    // run tests
-    bool valid = check_file(file);
+    // run verification tests
+    bool valid = check_file(warn_options, file, schema_file_name,file_name);
     fclose(file);
+
+
+    //Final program output
+    //TODO if schema validation fails, this still registers as a success
+    if(valid)
+    {
+        printf("xseedValidator SUCCESS, the file %s is VALID miniSEEDv3\n\n",file_name);
+    } else
+    {
+        printf("xseedValidator FAILED, the file %s is NOT VALID miniSEEDv3\n\n",file_name);
+    }
+
+    if (file_name)
+    {
+        free(file_name);
+    }
+    if (schema_file_name)
+    {
+        free(schema_file_name);
+    }
+
+
+
     return valid ? EXIT_SUCCESS : EXIT_FAILURE;
 }

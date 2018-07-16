@@ -3,6 +3,7 @@
 #include <xseed-common/xseed_string.h>
 #include <xseed-common/array.h>
 #include "warnings.h"
+#include <string.h>
 
 
 bool parse_warn_options(struct warn_options_s *warn_options, char * string_parse)
@@ -18,11 +19,12 @@ bool parse_warn_options(struct warn_options_s *warn_options, char * string_parse
         {
             tokened_alloc = expand_array((void **) &tokened, tokened_alloc, sizeof(char *));
         }
-        int token_len = strnlen(token, 1024);
+        size_t token_len = strnlen(token, 1024);
         tokened[tokened_len++] = strndup(token, token_len);
     }
     for (size_t i = 0; i < tokened_len && !bad_option;i++)
     {
+        // xseedvalidator --file myfile.mseeid -W error
         //split on equals
         char *flag = strtok(tokened[i],"=");
         char *value = strtok(NULL,"=");
@@ -31,6 +33,14 @@ bool parse_warn_options(struct warn_options_s *warn_options, char * string_parse
         if (0 == strncmp("error", flag, strlen("error")))
         {
             warn_options->treat_as_errors = true;
+        }
+        if (0 == strncmp("skip-header", flag, strlen("skip-header")))
+        {
+            warn_options->ignore_header = true;
+        }
+        if (0 == strncmp("skip-header", flag, strlen("skip-header")))
+        {
+            warn_options->warn_extra_headers = true;
         }
         else
         {

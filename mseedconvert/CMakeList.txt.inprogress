@@ -1,0 +1,22 @@
+cmake_minimum_required (VERSION 2.6)
+project (mseedconvert C)
+
+
+
+# add the binary tree to the search path for include files
+# so that we will find TutorialConfig.h
+include_directories("${PROJECT_BINARY_DIR}")
+
+add_library(mseed "/home/jeff/libmseed/libmseed.a")
+
+set_target_properties(mseed PROPERTIES LINKER_LANGUAGE CXX)
+SET(CMAKE_CXX_CREATE_STATIC_LIBRARY "<CMAKE_CXX_COMPILER> -o <TARGET> <OBJECTS>")
+
+include_directories ("/home/jeff/libmseed/")
+#add_subdirectory (mseedconvert)
+
+# add the executable
+add_executable(mseedconvert mseedconvert.c)
+target_link_libraries (mseedconvert mseed)
+
+

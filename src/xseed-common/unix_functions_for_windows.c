@@ -16,6 +16,7 @@ size_t strnlen(const char *s, size_t max_len)
 #endif /* HAS_STRLEN */
 
 #ifndef HAS_STRNDUP
+#if 0
 char *strndup(const char *s, size_t n)
 {
     size_t actual_len = strnlen(s, n);
@@ -23,4 +24,5 @@ char *strndup(const char *s, size_t n)
     memcpy(out, s, actual_len);
     return out;
 };
+#endif
 #endif /* HAS_STRDUP */
