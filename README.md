@@ -1,4 +1,4 @@
-# XSEED
+# XSEED-Utils
 This repository contains utilities to convert and verify the xSEED standard for miniSEED file
 
 ## Install
