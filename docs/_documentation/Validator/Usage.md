@@ -5,4 +5,4 @@ order: 2
 title: Usage
 ---
 
-This is a place holder
+```./xseedvalidator -f <miniSEEDv3 file to validate> -j <JSON schema to validate extra headers against (optional)>```
