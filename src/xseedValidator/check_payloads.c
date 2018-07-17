@@ -25,7 +25,7 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
     char *buffer = (char *) calloc(payload_len +1, sizeof(char));
     if (payload_len > fread(buffer, sizeof(char), payload_len, input))
     {
-        ms_log(2,"Error: failed to read record data payload into buffer");
+        ms_log(2,"Error: failed to read record data payload into buffer\n");
         answer = false;
     }
 #if 0
@@ -65,10 +65,8 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
     bool print_data = true;
     int verbose = 3;
 
-    //unpack data payload, check CRC
-    ms_log (0, "---Started Data Payload Verification\n");
 
-    //Here we decode and check using libmseed's functions
+    //Decode and check using libmseed's functions
     MS3Record *msr = NULL;
     MS3Record *msrOut = NULL;
 
@@ -76,6 +74,7 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
     int ierr;
     uint32_t flags;
 
+    //unpack data payload, check CRC
     flags |= MSF_UNPACKDATA;
     flags |= MSF_VALIDATECRC;
 
@@ -180,12 +179,8 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
     }
 
 
-
-    ms_log (0, "---Completed Data Payload Verification---\n");
     return answer;
 
-
-    //return answer;
 }
 
 #if 0

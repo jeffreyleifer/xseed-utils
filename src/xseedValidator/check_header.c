@@ -11,16 +11,11 @@
 
 
 
-/*
- *
+/*!
 
-  * Three levels are recognized:
- * 0  : Normal log messages, printed using log_print with logprefix
- * 1  : Diagnostic messages, printed using diag_print with logprefix
- * 2+ : Error messagess, printed using diag_print with errprefix
+@brief Validates a miniSEED Version 3 Header
 
-
-
+ Specification:
 A record is composed of a header followed by a time series data payload. The byte order of binary
 fields in the header must be least significant byte first (little endian).
 The total length of a record is variable and is the sum of 40 (length of fixed section of header),
@@ -52,10 +47,11 @@ All length values are specified in bytes, which are assumed to be 8-bits in leng
 
 
 
+//check_header.c functions
 bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt);
 bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt);
 
-/*! @brief Check header for valid values
+/*! @brief main validate header routine
  *
  *  @param[in] options -W cmd line warn options (currently not implemented)
  *  @param[in] input file pointer to miniSEED file
@@ -67,7 +63,8 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
  *
  *  @todo handle big endian case
  *
- */bool check_header(struct warn_options_s *options, FILE *input_file, long file_len, long *file_pos, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt)
+ */bool check_header(struct warn_options_s *options, FILE *input_file, long file_len, long *file_pos,
+                      uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt)
 {
 
 
@@ -75,12 +72,10 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
     //prime buffer
     char buffer[XSEED_STATIC_HEADER_LEN];
 
-    //read values into buffer, dummy EOF check
-    ms_log (0, "---------------------------------------------\n");
-    ms_log (0,"---Starting fixed header verification---\n");
+    //read values into buffer, EOF check
     if ( XSEED_STATIC_HEADER_LEN != fread((void *)buffer, sizeof(char), XSEED_STATIC_HEADER_LEN, input_file))
     {
-        ms_log (2, "Error: File size mismatch, please double check input record\n");
+        ms_log (2, "Error: File size mismatch, check input record\n");
         header_valid = false;
     }
 
@@ -126,19 +121,18 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
     }
 
 
+    //Check valid Year
     uint16_t year = (uint8_t )buffer[8] | (uint8_t)buffer[9] << 8;
-
     ms_log (0, "Checking Year value: %d\n", year);
     if(year < 0 || year > 65535)
     {
         ms_log(2,"Error : Year value out of range (0-65535)\n");
         header_valid = false;
     }
-    //TODO Warn for future data
+    //TODO Warn for data in future
 
 
-    //Check for Valid Day-of-Year
-    //assuming you have read your bytes little-endian
+    //Check valid Day-of-Year
     uint16_t doy = (uint8_t )buffer[10] | (uint8_t)buffer[11] << 8;
     ms_log (0, "Checking Day of Year value: %d\n", doy);
     if (366 < doy || 1 > doy)
@@ -152,7 +146,7 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
     */
 
 
-    //Check for valid hour range
+    //Check valid hour range
     uint8_t hours = (uint8_t)buffer[12];
     ms_log (0, "Checking Hours value: %d\n", hours);
     if ( hours < 0 || hours > 23)
@@ -161,7 +155,7 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
         header_valid = false;
     }
 
-    //Check for Valid min rage
+    //Check valid min rage
     uint8_t mins = (uint8_t)buffer[13];
     ms_log (0, "Checking Mins value: %d\n", mins);
     if ( mins < 0 || mins > 59)
@@ -170,7 +164,7 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
         header_valid = false;
     }
 
-    //Check for seconds range
+    //Check valid seconds range
     uint8_t secs = (uint8_t)buffer[14];
     ms_log (0, "Checking Secs value: %d\n", secs);
     if ( secs < 0 || secs > 60 )
@@ -183,7 +177,7 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
     //Dylans way
     //  uint32_t nanoseconds = buffer[12] + buffer[13]*(0xFF+1) +buffer[14]*(0xFFFF+1) + buffer[15]*(0xFFFFFF+1);
 
-    // assuming you have read your bytes little-endian
+    //Check valid nanoseconds
     uint32_t nanoseconds = ((uint8_t)buffer[4] | ((uint8_t)buffer[5] << 8) | ((uint8_t)buffer[6] << 16) | ((uint8_t)buffer[7] << 24));
     ms_log (0, "Checking Nanoseconds value: %d\n", nanoseconds);
     if (999999999 < nanoseconds)
@@ -249,13 +243,11 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
 
 
 
-    /*convert to float64 */
+    //Get Sample Rate
     double sample_rate;
     //TODO convenience function for parsing buffer, in progress
     //buffer_to_number(buffer+16, sizeof(double), XSEED_DOUBLE, &sample_rate);
-
-
-    //TODO need check for invalid sample rate
+    //TODO need check for valid sample rate
     sample_rate = *((double*)((uint8_t*)buffer+16));
     if(sample_rate < 0 )
     {
@@ -264,16 +256,19 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
     ms_log(0, "Checking sample rate value: %f\n", sample_rate);
 
 
-    //TODO need check for invalid number_samples
-    //uint32_t number_samples_old = buffer[24] + buffer[25]*(0xFF+1) +buffer[26]*(0xFFFF+1) + buffer[27]*(0xFFFFFF+1);
+    //Get Number of Samples
+    //TODO need check for valid number_samples
+    //uint32_t number_samples = buffer[24] + buffer[25]*(0xFF+1) +buffer[26]*(0xFFFF+1) + buffer[27]*(0xFFFFFF+1);
     uint32_t number_samples = ((uint8_t)buffer[24] | ((uint8_t)buffer[25] << 8) | ((uint8_t)buffer[26] << 16) | ((uint8_t)buffer[27] << 24));
     ms_log(0, "Checking number of samples value: %d\n", number_samples);
 
+    //Get CRC Value
     //uint32_t CRC = buffer[28] + buffer[29]*(0xFF+1) +buffer[30]*(0xFFFF+1) + buffer[31]*(0xFFFFFF+1);
     uint32_t CRC = ((uint8_t)buffer[28]) | ((uint8_t)buffer[29] << 8) | ((uint8_t)buffer[30] << 16) | ((uint8_t)buffer[31]) << 24 ;
     ms_log(0, "CRC value: 0x%0X\n",CRC);
 
-    //TODO Check for invalid dataPubVersion?
+    //Get dataPubVersion
+    //TODO Check for valid dataPubVersion
     uint8_t dataPubVersion = (uint8_t)buffer[32];
     ms_log(0, "Data Publication Version value: %d\n",dataPubVersion);
     uint8_t identifier_l = (uint8_t)buffer[33];
@@ -320,8 +315,8 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
     }
 
 
+    //Check valid Year
     uint16_t year = (uint8_t )buffer[9] | (uint8_t)buffer[8] << 8;
-
     ms_log (0, "Checking Year value: %d\n", year);
     if(year < 0 || year > 65535)
     {
@@ -331,7 +326,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
     //TODO Warn for future data
 
 
-    //Check for Valid Day-of-Year
+    //Check valid Day-of-Year
     //assuming you have read your bytes big-endian
     uint16_t doy = (uint8_t )buffer[11] | (uint8_t)buffer[10] << 8;
     ms_log (0, "Checking Day of Year value: %d\n", doy);
@@ -346,7 +341,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
     */
 
 
-    //Check for valid hour range
+    //Check valid hour range
     uint8_t hours = (uint8_t)buffer[12];
     ms_log (0, "Checking Hours value: %d\n", hours);
     if ( hours < 0 || hours > 23)
@@ -355,7 +350,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
         header_valid = false;
     }
 
-    //Check for Valid min rage
+    //Check valid min rage
     uint8_t mins = (uint8_t)buffer[13];
     ms_log (0, "Checking Mins value: %d\n", mins);
     if ( mins < 0 || mins > 59)
@@ -364,7 +359,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
         header_valid = false;
     }
 
-    //Check for seconds range
+    //Check valid seconds range
     uint8_t secs = (uint8_t)buffer[14];
     ms_log (0, "Checking Secs value: %d\n", secs);
     if ( secs < 0 || secs > 60 )
@@ -374,10 +369,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
     }
 
 
-    //Dylans way
-    //  uint32_t nanoseconds = buffer[12] + buffer[13]*(0xFF+1) +buffer[14]*(0xFFFF+1) + buffer[15]*(0xFFFFFF+1);
-    //My way
-    // assuming you have read your bytes big-endian
+    //Check Valid nanoseconds
     uint32_t nanoseconds = ((uint8_t)buffer[7] | ((uint8_t)buffer[6] << 8) | ((uint8_t)buffer[5] << 16) | ((uint8_t)buffer[4] << 24));
     ms_log (0, "Checking Nanoseconds value: %d\n", nanoseconds);
     if (999999999 < nanoseconds)
@@ -385,7 +377,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
         /*TODO to many nanoseconds */
     }
 
-    //Check for Payload type
+    //Check valid Payload Type
     uint8_t payload = (uint8_t)buffer[15];
     *payload_fmt = payload;
     ms_log(0, "Checking Payload Flag: %d\n", payload);
@@ -443,13 +435,11 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
 
 
 
-    /*convert to float64 */
+    //Get Sample Rate
     double sample_rate;
-    //TODO conviance funtion for parsing buffer, in progress
+    //TODO  for parsing buffer, in progress
     //buffer_to_number(buffer+16, sizeof(double), XSEED_DOUBLE, &sample_rate);
-
-
-    //TODO need check for invalid sample rate
+    //TODO need check for valid sample rate
     sample_rate = *((double*)((uint8_t*)buffer+16));
     if(sample_rate < 0 )
     {
@@ -457,17 +447,19 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
     }
     ms_log(0, "Checking sample rate value: %f\n", sample_rate);
 
-
-    //TODO need check for invalid number_samples
+    //Get Number of Samples
+    //TODO need check for valid number_samples
     //uint32_t number_samples_old = buffer[24] + buffer[25]*(0xFF+1) +buffer[26]*(0xFFFF+1) + buffer[27]*(0xFFFFFF+1);
     uint32_t number_samples = ((uint8_t)buffer[27] | ((uint8_t)buffer[26] << 8) | ((uint8_t)buffer[25] << 16) | ((uint8_t)buffer[24] << 24));
     ms_log(0, "Checking number of samples value: %d\n", number_samples);
 
+    //Get CRC
     //uint32_t CRC = buffer[28] + buffer[29]*(0xFF+1) +buffer[30]*(0xFFFF+1) + buffer[31]*(0xFFFFFF+1);
     uint32_t CRC = ((uint8_t)buffer[31]) | ((uint8_t)buffer[30] << 8) | ((uint8_t)buffer[29] << 16) | ((uint8_t)buffer[28]) << 24 ;
     ms_log(0, "CRC value: 0x%0X\n",CRC);
 
-    //TODO Check for invalid dataPubVersion?
+    //Get dataPubVersion
+    //TODO Check for valid dataPubVersion?
     uint8_t dataPubVersion = (uint8_t)buffer[32];
     ms_log(0, "Data Publication Version value: %d\n",dataPubVersion);
     uint8_t identifier_l = (uint8_t)buffer[33];
