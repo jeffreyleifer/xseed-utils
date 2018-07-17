@@ -5,6 +5,12 @@ This repository contains utilities to convert and verify the xSEED standard for 
 run ```cmake .``` on the root directory
 
 then ``make`` -- NOTE: Internet connection required
+### Dependanceis
+1.libmseed v3
+2.WJElement
+
+NOTE: These are automatically installed via cmake
+
 
 ## xSEED Validator
 Checks a miniSEEDv3 file for: 
