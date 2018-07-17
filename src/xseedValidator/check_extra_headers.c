@@ -6,6 +6,7 @@
 #include "warnings.h"
 #include <wjelement.h>
 #include <libmseed.h>
+#include <xseed-common/files.h>
 
 
 #define SCHEMA_BUFFER_SIZE 1024u
@@ -48,7 +49,7 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
         ms_log(0,"This record does not contain an extra header\n");
     }
 
-    if (schema)
+    if (schema && xseed_file_exists(schema))
     {
 
         //Get schema from buffered data
