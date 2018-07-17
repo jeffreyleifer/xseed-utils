@@ -42,10 +42,14 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
         valid_extra_header = false;
     }
 
+
+    if(extra_header_len == 0)
+    {
+        ms_log(0,"This record does not contain an extra header\n");
+    }
+
     if (schema)
     {
-        ms_log(0,"---Starting extra header verification---\n", schema);
-        ms_log(0,"Checking JSON file for valid structure: %s\n", schema);
 
         //Get schema from buffered data
         WJElement document_element = WJEParse(buffer);
@@ -65,30 +69,34 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
                     WJROpenFILEDocument(schema_file, schema_buffer, SCHEMA_BUFFER_SIZE), NULL, NULL, NULL);
             WJEErrCB errFunc = &schema_error_func;
 
+            //TODO Check json file for valid structure
+            //ms_log(0,"Checking JSON file for valid structure: %s\n", schema);
+
+
+            XplBool isValid = WJESchemaValidate(schema_element, document_element, errFunc, NULL, NULL, NULL);
             //Validate schemas
-            if (!WJESchemaValidate(schema_element, document_element, errFunc, NULL, NULL, NULL))
+            if (!isValid)
             {
-                /*TODO warn anything not printed by schema error */
-                ms_log(3, "Schema not valid! Something went wrong in validation\n");
+                /*TODO Add to error at the end of output saying the provided schema was invalid*/
+                ms_log(3, "Error - Schema validation failed!\n");
                 valid_extra_header = false;
+
 
             } else
             {
-                ms_log(0, "\nSchema Valid!\n");
+                ms_log(0, "Schema validation success!\n");
             }
 
         } else
             {
-                ms_log(1, "\nWarning: No extra headers found, nothing to validate schema against\n");
+                ms_log(1, "Warning: No extra headers found, nothing to validate schema against\n");
                 valid_extra_header = true;//TODO ?????
             }
 
-    }
-    /*else
+    } else
     {
-        //TODO might want to warn about not checking extra headers because no schema loaded?
-    }*/
-
+        ms_log(0,"No json schema file provided, skipping Extra Header check\n");
+    }
     /*TODO other checks */
 
 
@@ -97,7 +105,7 @@ bool check_extra_headers(struct warn_options_s *options, char *schema, FILE *inp
     {
         free (buffer);
     }
-    ms_log(0,"---Finished extra header verification---\n", schema);
+
     return valid_extra_header;
 }
 

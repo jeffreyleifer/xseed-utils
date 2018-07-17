@@ -73,8 +73,6 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
     char buffer[XSEED_STATIC_HEADER_LEN];
 
     //read values into buffer, EOF check
-    ms_log (0, "---------------------------------------------\n");
-    ms_log (0,"---Starting fixed header verification---\n");
     if ( XSEED_STATIC_HEADER_LEN != fread((void *)buffer, sizeof(char), XSEED_STATIC_HEADER_LEN, input_file))
     {
         ms_log (2, "Error: File size mismatch, check input record\n");

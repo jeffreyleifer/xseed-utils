@@ -32,7 +32,6 @@ static const struct xseed_option_s args[] = {
 int main(int argc, char **argv)
 {
 
-
     //vars to store command line options/args
     char *short_opt_string = NULL;
     struct option *long_opt_array = NULL;
@@ -50,7 +49,7 @@ int main(int argc, char **argv)
     xseed_get_short_getopt_string (&short_opt_string, args);
     xseed_get_long_getopt_array(&long_opt_array, args);
 
-    //Get usage options TODO inprogress
+    //Get usage options TODO in progress
     int longindex;
     while(-1 != (opt=getopt_long(argc, argv, short_opt_string, long_opt_array, &longindex)))
     {
@@ -111,7 +110,7 @@ int main(int argc, char **argv)
 
 
     //Final program output
-    //TODO if schema validation fails, this still registers as a success
+    //TODO if extra header schema validation fails, this still registers as a success
     if(valid)
     {
         printf("xseedValidator SUCCESS, the file %s is VALID miniSEEDv3\n\n",file_name);
@@ -131,5 +130,6 @@ int main(int argc, char **argv)
 
 
 
-    return valid ? EXIT_SUCCESS : EXIT_FAILURE;
+    //return valid ? EXIT_SUCCESS : EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }
