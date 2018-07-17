@@ -6,4 +6,4 @@ permalink: /documentation/
 
 ## Welcome to the {{ site.title }} Documentation!
 
-This is a placeholder
+This repository contains utilities to convert and verify the xSEED standard for miniSEED files.

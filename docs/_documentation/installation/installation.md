@@ -5,4 +5,9 @@ order: 1
 title: Installation
 ---
 
-This is a place holder
+run ```cmake .``` on the root directory
+
+
+then ```make```
+
+***Note**:* *Internet connection is required.*
