@@ -6,9 +6,7 @@ title: Introduction
 ---
 Validator checks a miniSEEDv3 file for: 
 
-1. 
-   Valid fixed header.
-
+1. Valid fixed header.
 2. Valid payload.
 3. Valid extra header via user provided JSON schema (optional).
 
