@@ -32,7 +32,7 @@ static int packencoding = -1;
 static int packversion = 3;
 static int8_t forcerepack = 0;
 static char *inputfile = NULL;
-static char *jsonschema = NULL;
+static char *json_input = NULL;
 static char *outputfile = NULL;
 static FILE *outfile = NULL;
 
@@ -42,6 +42,8 @@ static void record_handler (char *record, int reclen, void *ptr);
 static void print_stderr (char *message);
 static void usage (void);
 static void term_handler (int sig);
+
+int jsonInjectionSetup(MS3Record *msr,int verbose);
 
 MS3Record *msr = NULL;
 
@@ -96,11 +98,6 @@ main (int argc, char **argv)
   }
 
 
-    size_t extra_size = 0;
-    char * extra_buf = NULL;
-    char * pretty_json = NULL;
-    JSON_Value * root_value = NULL;
-
 
   /* Set flag to skip non-data */
   flags |= MSF_SKIPNOTDATA;
@@ -122,7 +119,7 @@ main (int argc, char **argv)
 
     /* Conversion to version 3, if unpacking data is not needed */
     /* If json extra headers are to be injected, unpack and repack is required */
-    if ((forcerepack == 0 && jsonschema == NULL ) && packversion == 3 &&
+    if ((forcerepack == 0 ) && packversion == 3 &&
         (packencoding < 0 || packencoding == msr->encoding || msr->samplecnt == 0))
     {
       if (!rawrec && (rawrec = (char *)malloc (MAXRECLEN)) == NULL)
@@ -132,6 +129,15 @@ main (int argc, char **argv)
       }
 
       // TODO repack could determine the number of samples for INT, FLOAT32 and FLOAT64 and trim payload length
+
+
+      if(json_input != NULL)
+      {
+
+          jsonInjectionSetup(msr,verbose);
+
+      }
+
 
       reclen = msr3_repack_mseed3 (msr, rawrec, MAXRECLEN, verbose);
 
@@ -167,56 +173,11 @@ main (int argc, char **argv)
 
 
 
-
-        if(jsonschema != NULL)
+        if(json_input != NULL)
         {
-
-            ms_log(0,"Input JSON schema found, serializing for injection into mseed record\n");
-            root_value = json_parse_file(jsonschema);
-
-
-            if(verbose==3)
-            {
-                pretty_json = json_serialize_to_string_pretty(root_value);
-                printf("Root element:\n  %s\n",pretty_json);
-                json_free_serialized_string(pretty_json);
-            }
-
-
-            extra_size =  json_serialization_size(root_value);
-
-
-            printf("extra buffer size = %zu\n",extra_size);
-
-            if ((extra_buf = (char *)malloc ((extra_size))) == NULL)
-            {
-                ms_log (2, "Cannot allocate memory for extra header buffer\n");
-
-            }
-
-            JSON_Status ierr = json_serialize_to_buffer(root_value, extra_buf, extra_size);
-
-            //Debug
-            //printf("extra buffer:\n%s\n",extra_buf);
-
-            if(ierr == JSONFailure)
-            {
-                ms_log (2, "Cannot serialize json to buffer: %s\n", jsonschema);
-                printf("error code = %d\n",ierr);
-                return 1;
-            }
-
-
+            jsonInjectionSetup(msr,verbose);
         }
 
-      if(jsonschema)
-      {
-        msr->extralength = (uint16_t)(extra_size-1);
-        msr->extra = extra_buf;
-        int32_t recl = msr->reclen;
-        recl = recl + (int32_t)extra_size;
-        msr->reclen = recl;
-      }
 
 
       msr->formatversion = packversion;
@@ -257,10 +218,6 @@ main (int argc, char **argv)
   /* Make sure everything is cleaned up */
   ms3_readmsr (&msr, NULL, NULL, NULL, 0, 0);
 
-  if(root_value)
-  {
-      json_value_free(root_value);
-  }
 
   if (rawrec)
     free (rawrec);
@@ -268,8 +225,71 @@ main (int argc, char **argv)
   if (outfile)
     fclose (outfile);
 
+
+
   return 0;
 } /* End of main() */
+
+
+
+int jsonInjectionSetup(MS3Record *msr, int verbose)
+{
+    size_t extra_size = 0;
+    char * extra_buf = NULL;
+    char * pretty_json = NULL;
+    JSON_Value * root_value = NULL;
+
+    ms_log(0,"Input JSON file found, serializing for injection into mseed record\n");
+    root_value = json_parse_file(json_input);
+
+
+    if(verbose==3)
+    {
+        pretty_json = json_serialize_to_string_pretty(root_value);
+        printf("Root element:\n  %s\n",pretty_json);
+        json_free_serialized_string(pretty_json);
+    }
+
+
+    extra_size =  json_serialization_size(root_value);
+
+
+    printf("extra buffer size = %zu\n",extra_size);
+
+    if ((extra_buf = (char *)malloc ((extra_size))) == NULL)
+    {
+        ms_log (2, "Cannot allocate memory for extra header buffer\n");
+
+    }
+
+    JSON_Status ierr = json_serialize_to_buffer(root_value, extra_buf, extra_size);
+
+    //Debug
+    //printf("extra buffer:\n%s\n",extra_buf);
+
+    if(ierr == JSONFailure)
+    {
+        ms_log (2, "Cannot serialize json to buffer: %s\n", json_input);
+        printf("error code = %d\n",ierr);
+        return 1;
+    }
+
+    msr->extralength = (uint16_t)(extra_size-1);
+    msr->extra = extra_buf;
+    int32_t recl = msr->reclen;
+    recl = recl + (int32_t)extra_size;
+    msr->reclen = recl;
+
+    if(root_value)
+    {
+        json_value_free(root_value);
+    }
+
+    return 0;
+
+}
+
+
 
 /***************************************************************************
  * convertsamples:
@@ -476,7 +496,7 @@ parameter_proc (int argcount, char **argvec)
     }
     else if (strcmp (argvec[optind], "-j") == 0)
     {
-      jsonschema = argvec[++optind];
+      json_input = argvec[++optind];
     }
     else if (strcmp (argvec[optind], "-o") == 0)
     {
@@ -502,8 +522,8 @@ parameter_proc (int argcount, char **argvec)
 
   ms_log (1, "input file is %s\n", inputfile);
 
-  if(jsonschema)
-    ms_log (1, "JSON file is %s\n", jsonschema);
+  if(json_input)
+    ms_log (1, "JSON file is %s\n", json_input);
 
   /* Make sure an inputfile was specified */
   if (!inputfile)
