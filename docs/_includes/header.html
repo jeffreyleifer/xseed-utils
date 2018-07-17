@@ -26,7 +26,7 @@
             {%assign items = category.items | sort: "order" %}
             {% for item in items %}
             <li role="menuitem" aria-label="Navigation menu item"><a href="{{ item.url | relative_url }}" class="doc-link" role="link" aria-label="{{ item.title }}">{{ item.title }}</a></li>
-            {% endfor %}
+            {% endfor %} 
         </ul>
         {% endfor %}
     </div>

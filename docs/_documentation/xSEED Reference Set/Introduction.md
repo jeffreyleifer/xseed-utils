@@ -1,7 +1,8 @@
 ---
 layout: documentation
-category: Validator
+category: xSEED Reference Sets
 order: 1
 title: Introduction
 ---
-This is a placeholder
+
+This is a place holder

@@ -1,7 +1,8 @@
 ---
 layout: documentation
-category: Validator
+category: xSEED to Text
 order: 1
 title: Introduction
 ---
-This is a placeholder
+
+Placeholder
