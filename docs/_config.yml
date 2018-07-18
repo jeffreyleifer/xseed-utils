@@ -63,6 +63,6 @@ category_order:
     - 'Validator'
     - 'xSEED to Text'
     - 'xSEED to JSON'
-    - 'xSEED to Converter'
+    - 'xSEED Converter'
     - 'xSEED Reference Sets'
   

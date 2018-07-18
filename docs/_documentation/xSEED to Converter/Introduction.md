@@ -1,6 +1,6 @@
 ---
 layout: documentation
-category: xSEED to Converter
+category: xSEED Converter
 order: 1
 title: Introduction
 ---
