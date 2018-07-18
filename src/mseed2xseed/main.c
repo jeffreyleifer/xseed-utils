@@ -20,8 +20,8 @@
 static void term_handler (int sig);
 #endif
 
-#include "/home/jeff/xseed-utils/libsrc/libmseed/src/MSEED_LIBRARY-build/libmseed.h"
-#include "/home/jeff/xseed-utils/libsrc/libmseed/src/MSEED_LIBRARY-build/parson.h"
+#include <libmseed.h>
+#include <parson.h>
 
 #define VERSION "0.1"
 #define PACKAGE "mseedconvert"
