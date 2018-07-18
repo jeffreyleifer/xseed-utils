@@ -17,12 +17,6 @@
 
 #ifndef WIN32
 #include <signal.h>
-#include <bits/sigaction.h> //TODO this is bad,
-#ifndef SA_RESTART
-#define SA_RESTART      0x0040
-#endif
-
-
 static void term_handler (int sig);
 #endif
 
@@ -72,23 +66,23 @@ main (int argc, char **argv)
     uint64_t totalpackedrecords = 0;
     int8_t lastrecord;
 
-#ifndef WIN32
-    //TODO This is not c99 compliant have to add  #include <bits/sigaction.h>  which is bad
-    /* Signal handling, use POSIX calls with standardized semantics */
-    struct sigaction sa;
-
-    sa.sa_flags = SA_RESTART;
-    sigemptyset (&sa.sa_mask);
-
-    sa.sa_handler = term_handler;
-    sigaction (SIGINT, &sa, NULL);
-    sigaction (SIGQUIT, &sa, NULL);
-    sigaction (SIGTERM, &sa, NULL);
-
-    sa.sa_handler = SIG_IGN;
-    sigaction (SIGHUP, &sa, NULL);
-    sigaction (SIGPIPE, &sa, NULL);
-#endif
+//#ifndef WIN32
+//    //TODO This is not c99 compliant
+//    /* Signal handling, use POSIX calls with standardized semantics */
+//    struct sigaction sa;
+//
+//    sa.sa_flags = SA_RESTART;
+//    sigemptyset (&sa.sa_mask);
+//
+//    sa.sa_handler = term_handler;
+//    sigaction (SIGINT, &sa, NULL);
+//    sigaction (SIGQUIT, &sa, NULL);
+//    sigaction (SIGTERM, &sa, NULL);
+//
+//    sa.sa_handler = SIG_IGN;
+//    sigaction (SIGHUP, &sa, NULL);
+//    sigaction (SIGPIPE, &sa, NULL);
+//#endif
 
     /* Process given parameters (command line and parameter file) */
     if (parameter_proc (argc, argv) < 0)
