@@ -7,6 +7,32 @@
  * Convert miniSEED.  For example, miniSEED 2 to 3 or to change encoding.
  *
  * Written by Chad Trabant, IRIS Data Management Center
+ *
+ *
+ *
+ * Field  Field name                            Type       Length    Offset  Content
+1      Record header indicator (‘MS’)        CHAR       2         0       ASCII ‘MS’
+2      Format version (3)                    UINT8      1         2
+3      Flags                                 UINT8      1         3
+       Record start time
+4a       Nanosecond (0 - 999999999)          UINT32     4         4
+4b       Year (0 - 65535)                    UINT16     2         8
+4c       Day-of-year  (1 - 366)              UINT16     2         10
+4d       Hour (0 - 23)                       UINT8      1         12
+4e       Minute (0 - 59)                     UINT8      1         13
+4f       Second (0 - 60)                     UINT8      1         14
+5      Data encoding format                  UINT8      1         15
+6      Sample rate/period                    FLOAT64    8         16
+7      Number of samples                     UINT32     4         24
+8      CRC of the record                     UINT32     4         28
+9      Data publication version              UINT8      1         32
+10     Length of identifier in bytes         UINT8      1         33
+11     Length of extra headers in bytes      UINT16     2         34
+12     Length of data payload in bytes       UINT32     2         36
+13     Time series identifier                CHAR       V         40      URN identifier
+14     Extra header fields                   JSON       V         40 + field 10
+15     Data payload                          encoded    V         40 + field 10 + field 11
+ *
  ***************************************************************************/
 
 #include <errno.h>
@@ -24,6 +50,8 @@ static void term_handler (int sig);
 
 #include <libmseed.h>
 #include <parson.h>
+#include <mseedformat.h>
+#include <unpack.h>
 
 #define VERSION "0.1"
 #define PACKAGE "mseedconvert"
@@ -35,6 +63,8 @@ static int packreclen = -1;
 static int packencoding = -1;
 static int packversion = 3;
 static int8_t forcerepack = 0;
+static int8_t modifyheaders = 0;
+static int8_t generatedata = 0;
 static char *inputfile = NULL;
 static char *json_input = NULL;
 static char *outputfile = NULL;
@@ -50,12 +80,14 @@ static void term_handler (int sig);
 int jsonInjectionSetup(MS3Record *msr,int verbose);
 
 MS3Record *msr = NULL;
+MS3Record *msrOut = NULL;
 
 int
 main (int argc, char **argv)
 {
 
     char *rawrec = NULL;
+    char *rawrecOut = NULL;
     int retcode;
     int reclen;
     uint32_t flags = 0;
@@ -111,6 +143,10 @@ main (int argc, char **argv)
     while((retcode = ms3_readmsr (&msr, inputfile, NULL, &lastrecord,
                                   flags, verbose)) == MS_NOERROR)
     {
+
+
+
+
         if (verbose >= 1)
             msr3_print (msr, verbose - 1);
 
@@ -133,18 +169,70 @@ main (int argc, char **argv)
                 break;
             }
 
+            int extraoffset = 0;
+            uint8_t tsidlength;
+            int8_t swapflag;
+
+            uint16_t year = 1966;
+            uint16_t day = 13;
+            uint8_t hour = 1;
+            uint8_t min = 1;
+            uint8_t sec = 10;
+            uint32_t nsec= 10;
+
+            swapflag = (ms_bigendianhost ()) ? 1 : 0;
+
+
+
+            tsidlength = strlen (msr->tsid);
+            extraoffset = MS3FSDH_LENGTH + tsidlength;
+
+            /* Build fixed header */
+            msr->record[0] = 'M';
+            msr->record[1] = 'S';
+            *pMS3FSDH_FORMATVERSION (msr->record) = 3;
+            *pMS3FSDH_FLAGS (msr->record) = msr->flags;
+            *pMS3FSDH_YEAR (msr->record) = HO2u (year, swapflag);
+            *pMS3FSDH_DAY (msr->record) = HO2u (day, swapflag);
+            *pMS3FSDH_HOUR (msr->record) = hour;
+            *pMS3FSDH_MIN (msr->record) = min;
+            *pMS3FSDH_SEC (msr->record) = sec;
+            *pMS3FSDH_ENCODING (msr->record) = msr->encoding;
+            *pMS3FSDH_NSEC (msr->record) = HO4u (nsec, swapflag);
+
+            /* If rate positive and less than one, convert to period notation */
+            if (msr->samprate != 0.0 && msr->samprate > 0 && msr->samprate < 1.0)
+                *pMS3FSDH_SAMPLERATE(msr->record) = HO8f((-1.0 / msr->samprate), swapflag);
+            else
+                *pMS3FSDH_SAMPLERATE(msr->record) = HO8f(msr->samprate, swapflag);
+
+            *pMS3FSDH_PUBVERSION(msr->record) = msr->pubversion;
+            *pMS3FSDH_TSIDLENGTH(msr->record) = 5;
+            *pMS3FSDH_EXTRALENGTH(msr->record) = HO2u(msr->extralength, swapflag);
+            memcpy (pMS3FSDH_TSID(msr->record), "TEST!",5 );
+
+            if (msr->extralength > 0)
+                memcpy (msr->record + extraoffset, msr->extra, msr->extralength);
+
+            //return (MS3FSDH_LENGTH + tsidlength + msr->extralength);
+
+
+
             // TODO repack could determine the number of samples for INT, FLOAT32 and FLOAT64 and trim payload length
 
+
+
+
+             msr3_unpack_mseed3(msr->record, msr->reclen,&msrOut, flags, verbose);
 
             if(json_input != NULL)
             {
 
-                jsonInjectionSetup(msr,verbose);
+                jsonInjectionSetup(msrOut,verbose);
 
             }
 
-
-            reclen = msr3_repack_mseed3 (msr, rawrec, MAXRECLEN, verbose);
+            reclen = msr3_repack_mseed3 (msrOut, rawrec, MAXRECLEN, verbose);
 
             if (reclen < 0)
             {
@@ -156,6 +244,8 @@ main (int argc, char **argv)
             record_handler (rawrec, reclen, NULL);
             packedsamples = msr->samplecnt;
             packedrecords = 1;
+
+            msr3_print(msrOut,3);
 
         }
             /* Otherwise, unpack samples and repack record */
@@ -500,6 +590,14 @@ parameter_proc (int argcount, char **argvec)
             packversion = strtol (argvec[++optind], NULL, 10);
         }
         else if (strcmp (argvec[optind], "-j") == 0)
+        {
+            json_input = argvec[++optind];
+        }
+        else if (strcmp (argvec[optind], "-H") == 0)
+        {
+            json_input = argvec[++optind];
+        }
+        else if (strcmp (argvec[optind], "-G") == 0)
         {
             json_input = argvec[++optind];
         }

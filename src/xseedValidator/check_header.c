@@ -419,12 +419,12 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
             ms_log(0, "Steim-3 integer compression, big-endian\n");
             break;
             //TODO verify this with chad
-        case 30: /* SRO Gain Ranged Format, ?-endian */
+        case 30: /* SRO Gain Ranged Format*/
             ms_log(0, "SRO Gain Ranged Format, ?-endian\n");
             break;
             //TODO verify this with chad
         case 32: /* DWWSSN Format, ?-endian */
-            ms_log(0, "DWWSSN Format, ?-endian\n");
+            ms_log(0, "DWWSSN Format\n");
             break;
         case 53: /* 32-bit integer, little-endian, general compressor */
             ms_log(0, "32-bit integer, little-endian, general compressor\n");
