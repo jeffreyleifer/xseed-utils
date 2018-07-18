@@ -20,11 +20,15 @@
 static void term_handler (int sig);
 #endif
 
-#include "/home/jeff/xseed-utils/libsrc/libmseed/src/MSEED_LIBRARY-build/libmseed.h"
-#include "/home/jeff/xseed-utils/libsrc/libmseed/src/MSEED_LIBRARY-build/parson.h"
+
+
+#include <libmseed.h>
+#include <parson.h>
 
 #define VERSION "0.1"
 #define PACKAGE "mseedconvert"
+
+
 
 static int8_t verbose = 0;
 static int packreclen = -1;
@@ -62,22 +66,23 @@ main (int argc, char **argv)
     uint64_t totalpackedrecords = 0;
     int8_t lastrecord;
 
-#ifndef WIN32
-    /* Signal handling, use POSIX calls with standardized semantics */
-    struct sigaction sa;
-
-    sa.sa_flags = SA_RESTART;
-    sigemptyset (&sa.sa_mask);
-
-    sa.sa_handler = term_handler;
-    sigaction (SIGINT, &sa, NULL);
-    sigaction (SIGQUIT, &sa, NULL);
-    sigaction (SIGTERM, &sa, NULL);
-
-    sa.sa_handler = SIG_IGN;
-    sigaction (SIGHUP, &sa, NULL);
-    sigaction (SIGPIPE, &sa, NULL);
-#endif
+//#ifndef WIN32
+//    //TODO This is not c99 compliant
+//    /* Signal handling, use POSIX calls with standardized semantics */
+//    struct sigaction sa;
+//
+//    sa.sa_flags = SA_RESTART;
+//    sigemptyset (&sa.sa_mask);
+//
+//    sa.sa_handler = term_handler;
+//    sigaction (SIGINT, &sa, NULL);
+//    sigaction (SIGQUIT, &sa, NULL);
+//    sigaction (SIGTERM, &sa, NULL);
+//
+//    sa.sa_handler = SIG_IGN;
+//    sigaction (SIGHUP, &sa, NULL);
+//    sigaction (SIGPIPE, &sa, NULL);
+//#endif
 
     /* Process given parameters (command line and parameter file) */
     if (parameter_proc (argc, argv) < 0)
