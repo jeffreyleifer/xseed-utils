@@ -20,11 +20,17 @@
 static void term_handler (int sig);
 #endif
 
+
+
 #include <libmseed.h>
 #include <parson.h>
 
 #define VERSION "0.1"
 #define PACKAGE "mseedconvert"
+
+#ifndef SA_RESTART
+#define SA_RESTART      0x0040
+#endif
 
 static int8_t verbose = 0;
 static int packreclen = -1;
