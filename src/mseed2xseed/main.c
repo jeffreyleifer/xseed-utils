@@ -17,6 +17,12 @@
 
 #ifndef WIN32
 #include <signal.h>
+#include <bits/sigaction.h> //TODO this is bad,
+#ifndef SA_RESTART
+#define SA_RESTART      0x0040
+#endif
+
+
 static void term_handler (int sig);
 #endif
 
@@ -28,9 +34,7 @@ static void term_handler (int sig);
 #define VERSION "0.1"
 #define PACKAGE "mseedconvert"
 
-#ifndef SA_RESTART
-#define SA_RESTART      0x0040
-#endif
+
 
 static int8_t verbose = 0;
 static int packreclen = -1;
@@ -69,6 +73,7 @@ main (int argc, char **argv)
     int8_t lastrecord;
 
 #ifndef WIN32
+    //TODO This is not c99 compliant have to add  #include <bits/sigaction.h>  which is bad
     /* Signal handling, use POSIX calls with standardized semantics */
     struct sigaction sa;
 
