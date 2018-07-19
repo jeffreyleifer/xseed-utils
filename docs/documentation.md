@@ -1,9 +1,9 @@
 ---
 layout: documentation
-title: Home
+title: Documentation
 permalink: /documentation/
 ---
 
-## Welcome to xSEED!
+## Welcome to {{ site.title }} Documentation!
 
 This repository contains utilities to convert and verify the xSEED standard for miniSEED files.
