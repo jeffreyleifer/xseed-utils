@@ -3,7 +3,24 @@
 #include <unpack.h>
 #include <parson.h>
 #include <stdbool.h>
+#include <xseed-common/cmd_opt.h>
+#include <xseed-common/files.h>
+#include <xseed-common/xseed_string.h>
+#include <libmseed.h>
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#include <xseed-common/vcs_getopt.h>
+#else
+#include <unistd.h>
+#include <getopt.h>
+#endif
 
+
+//CMD line option structure
+static const struct xseed_option_s args[] = {
+        {'h',    "help", "Usage", NULL, NO_OPTARG},
+        {'f',    "file", "File to validate", NULL, MANDATORY_OPTARG},
+        {'v', "verbose", "Verbosity level", NULL, OPTIONAL_OPTARG},
+        {  0,         0, 0, 0, 0}};
 
 
 //Required to be global, ms3_readmsr having memory issues if it's a local variable
@@ -12,22 +29,9 @@ MS3Record *msrOut = NULL;
 int main(int argc, char **argv)
 {
 
-    if(argc < 2)
-    {
-        printf("xseed2json requires a miniSEED file as an argument\n");
-        //return -1;
-        //for ci TODO remove
-        return EXIT_SUCCESS;
-    }
 
-
-    char * filename = argv[1];
-    //TODO make args
-    int verbose = 3;
-    bool print_data = true;
 
     MS3Record *msr = NULL;
-
 
     JSON_Status ierr;
     JSON_Value *val = NULL;
@@ -40,11 +44,68 @@ int main(int argc, char **argv)
     char b;
     uint32_t flags;
 
+    //vars to store command line options/args
+    char *short_opt_string = NULL;
+    struct option *long_opt_array = NULL;
+    int opt;
+    int longindex;
+    unsigned char display_usage = 0;
+    uint8_t verbose = 0;
+    bool print_data = false;
+    char *file_name = NULL;
+
+    //parse command line args
+    xseed_get_short_getopt_string (&short_opt_string, args);
+    xseed_get_long_getopt_array(&long_opt_array, args);
+
+    //Set flag to unpack data and check CRC
     flags |= MSF_UNPACKDATA;
     flags |= MSF_VALIDATECRC;
 
+    while(-1 != (opt=getopt_long(argc, argv, short_opt_string, long_opt_array, &longindex)))
+    {
+        switch(opt)
+        {
+            //int file_name_size;
+            case 'f':
+                file_name = strndup(optarg, 1024);
+                break;
+            case 'v':
+                if (0 == optarg )
+                {
+                    verbose++;
+                }
+                else
+                {
+                    verbose = strlen(optarg) + 1;
+                }
+                break;
+            case 'h':
+                display_usage =1;
+                break;
+            default:
+                display_usage++;
+                break;
+        }
+        if (display_usage > 0)
+        {
+            break;
+        }
+    }
+    if (display_usage > 0 || NULL == file_name)
+    {
+        display_help(argv[0], "Program to Print a miniSEED file in JSON format", args);
+        return display_usage < 2 ? EXIT_FAILURE : EXIT_SUCCESS;
+    }
 
-while ((ms3_readmsr (&msr, filename, 0, NULL, 0, verbose) == MS_NOERROR ))
+    if (!xseed_file_exists(file_name))
+    {
+        printf("Error reading file: %s, File Not Found! \n",file_name);
+        return EXIT_FAILURE;
+    }
+
+
+while ((ms3_readmsr (&msr, file_name, 0, NULL, 0, verbose) == MS_NOERROR ))
 {
 
     if (!msr)
@@ -169,6 +230,10 @@ while ((ms3_readmsr (&msr, filename, 0, NULL, 0, verbose) == MS_NOERROR ))
         }
 
 
+        if(verbose > 0)
+        {
+            print_data = true;
+        }
 
     if(print_data) {
         if (msr->formatversion == 3) {

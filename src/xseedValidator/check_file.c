@@ -16,7 +16,7 @@
  *  @param[in] file_name miniSEED file path parsed from cmd line
  *
  */
-bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_name, char *file_name)
+bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_name, char *file_name, uint8_t verbose)
 {
 
     bool valid_file = false;
@@ -24,6 +24,7 @@ bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_
     bool valid_ident = false;
     bool valid_extra_header = false;
     bool valid_payload = false;
+
 
     int file_len = xseed_file_length(input);
     ms_log(0,"\n\nReading file %s\n",file_name);
@@ -39,7 +40,7 @@ bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_
 
         ms_log (0, "---------------------------------------------\n");
         ms_log (0,"---Starting Fixed Header verification---\n");
-        valid_header = check_header(options, input, file_len, &file_pos, &identifier_len, &extra_header_len, &payload_len, &payload_fmt);
+        valid_header = check_header(options, input, file_len, &file_pos, &identifier_len, &extra_header_len, &payload_len, &payload_fmt,verbose);
 
         if(valid_header)
         {
@@ -60,7 +61,7 @@ bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_
 
 
         ms_log(0,"---Starting Extra Header verification---\n");
-        valid_extra_header = check_extra_headers(options, schema_file_name, input, extra_header_len);
+        valid_extra_header = check_extra_headers(options, schema_file_name, input, extra_header_len, verbose);
         if(valid_extra_header && schema_file_name != NULL && extra_header_len > 0)
         {
             printf("Extra Header is valid!\n");
@@ -74,7 +75,7 @@ bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_
 
 
         ms_log (0, "---Started Data Payload Verification\n");
-        valid_payload = check_payloads(options, input, payload_len, payload_fmt,file_name);
+        valid_payload = check_payloads(options, input, payload_len, payload_fmt, file_name, verbose);
         if(valid_payload)
         {
             printf("Payload is valid!\n");

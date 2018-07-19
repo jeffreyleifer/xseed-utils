@@ -3,6 +3,26 @@
 #include <unpack.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <xseed-common/cmd_opt.h>
+#include <xseed-common/files.h>
+#include <xseed-common/xseed_string.h>
+#include <libmseed.h>
+#if defined(WIN32) || defined(_WIN32) || defined(WIN64) || defined(_WIN64)
+#include <xseed-common/vcs_getopt.h>
+#else
+#include <unistd.h>
+#include <getopt.h>
+#endif
+
+
+
+//CMD line option structure
+static const struct xseed_option_s args[] = {
+        {'h',    "help", "Usage", NULL, NO_OPTARG},
+        {'f',    "file", "File to validate", NULL, MANDATORY_OPTARG},
+        {'v', "verbose", "Verbosity level", NULL, OPTIONAL_OPTARG},
+        {  0,         0, 0, 0, 0}};
+
 
 
 //Required to be global, ms3_readmsr was having memory issues if it's a local variable
@@ -16,19 +36,6 @@ MS3Record *msrOut = NULL;
  */
 int main(int argc, char **argv)
 {
-    //Simple check for input file
-    if (argc < 2)
-    {
-        printf("xseed2text requires a miniSEED file as an argument\n");
-        //return -1;
-
-        //for ci TODO remove
-        return EXIT_SUCCESS;
-    }
-
-    //TODO make input flags
-    int verbose = 3;
-    bool print_data = true;
 
     //vars for parsing miniSEED file and payload
     MS3Record *msr = NULL;
@@ -36,19 +43,79 @@ int main(int argc, char **argv)
     int ierr;
     uint32_t flags;
 
+
+
+    //vars to store command line options/args
+    char *short_opt_string = NULL;
+    struct option *long_opt_array = NULL;
+    int opt;
+    int longindex;
+    unsigned char display_usage = 0;
+    uint8_t verbose = 0;
+    bool print_data = false;
+    char *file_name = NULL;
+
+    //parse command line args
+    xseed_get_short_getopt_string (&short_opt_string, args);
+    xseed_get_long_getopt_array(&long_opt_array, args);
+
     //Set flag to unpack data and check CRC
     flags |= MSF_UNPACKDATA;
     flags |= MSF_VALIDATECRC;
 
-    //get filename
-    char *file_name = argv[1];
+    while(-1 != (opt=getopt_long(argc, argv, short_opt_string, long_opt_array, &longindex)))
+    {
+        switch(opt)
+        {
+            //int file_name_size;
+            case 'f':
+                file_name = strndup(optarg, 1024);
+                break;
+            case 'v':
+                if (0 == optarg )
+                {
+                    verbose++;
+                }
+                else
+                {
+                    verbose = strlen(optarg) + 1;
+                }
+                break;
+            case 'h':
+                display_usage =1;
+                break;
+            default:
+                display_usage++;
+                break;
+        }
+        if (display_usage > 0)
+        {
+            break;
+        }
+    }
+    if (display_usage > 0 || NULL == file_name)
+    {
+        display_help(argv[0], "Program to Print a miniSEED file in human readable format", args);
+        return display_usage < 2 ? EXIT_FAILURE : EXIT_SUCCESS;
+    }
 
+    if (!xseed_file_exists(file_name))
+    {
+        printf("Error reading file: %s, File Not Found! \n",file_name);
+        return EXIT_FAILURE;
+    }
+
+
+    if(verbose > 2)
+    {
+        print_data = true;
+    }
 
     //Read in records
-    while ((ms3_readmsr(&msr, file_name, 0, NULL, 0, 3) == MS_NOERROR))
+    while ((ms3_readmsr(&msr, file_name, 0, NULL, 0, verbose + 1) == MS_NOERROR))
     {
         //Print header info
-        msr3_print(msr, verbose);
+        msr3_print(msr, verbose + 1);
 
         //The following code adapted from libmseed - msr3_parse(..)
         //Print payload if enabled

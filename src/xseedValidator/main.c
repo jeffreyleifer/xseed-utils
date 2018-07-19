@@ -32,15 +32,17 @@ static const struct xseed_option_s args[] = {
 int main(int argc, char **argv)
 {
 
+
+    uint8_t verbose = 0;
+    char *file_name = NULL;
+    char * schema_file_name = NULL;
+
     //vars to store command line options/args
     char *short_opt_string = NULL;
     struct option *long_opt_array = NULL;
     int opt;
-    int verbosity = 0;
-    char *file_name = NULL;
     struct warn_options_s warn_options[1];
     unsigned char display_usage = 0;
-    char * schema_file_name =NULL;
 
     //For warning options - not used TODO get working
     memset(warn_options, 0, sizeof(struct warn_options_s));
@@ -48,6 +50,7 @@ int main(int argc, char **argv)
     //parse command line args
     xseed_get_short_getopt_string (&short_opt_string, args);
     xseed_get_long_getopt_array(&long_opt_array, args);
+    
 
     //Get usage options TODO in progress
     int longindex;
@@ -62,11 +65,11 @@ int main(int argc, char **argv)
             case 'v':
                 if (0 == optarg )
                 {
-                    verbosity++;
+                    verbose++;
                 }
                 else
                 {
-                    verbosity = atoi(optarg);
+                    verbose = strlen(optarg) + 1;
                 }
                 break;
             case 'W':
@@ -105,7 +108,7 @@ int main(int argc, char **argv)
     FILE *file = NULL;
     file = fopen(file_name, "r");
     // run verification tests
-    bool valid = check_file(warn_options, file, schema_file_name,file_name);
+    bool valid = check_file(warn_options, file, schema_file_name,file_name,verbose);
     fclose(file);
 
 

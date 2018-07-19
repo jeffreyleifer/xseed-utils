@@ -48,8 +48,8 @@ All length values are specified in bytes, which are assumed to be 8-bits in leng
 
 
 //check_header.c functions
-bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt);
-bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt);
+bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt, uint8_t verbose);
+bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt, uint8_t verbose);
 
 /*! @brief main validate header routine
  *
@@ -64,7 +64,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
  *  @todo handle big endian case
  *
  */bool check_header(struct warn_options_s *options, FILE *input_file, long file_len, long *file_pos,
-                      uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt)
+                      uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt,int8_t verbose)
 {
 
 
@@ -84,12 +84,12 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
     if(is_big_emdian)
     {
         ms_log (0,"host is Big Endian\n");
-        header_valid = parse_header_big_endian(buffer, header_valid, identifier_len, extra_header_len, payload_len, payload_fmt);
+        header_valid = parse_header_big_endian(buffer, header_valid, identifier_len, extra_header_len, payload_len, payload_fmt,verbose);
 
     } else
     {
         ms_log (0,"host is Little Endian\n");
-        header_valid = parse_header_little_endian(buffer, header_valid, identifier_len, extra_header_len, payload_len, payload_fmt);
+        header_valid = parse_header_little_endian(buffer, header_valid, identifier_len, extra_header_len, payload_len, payload_fmt,verbose);
     }
 
 
@@ -97,7 +97,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
 }
 
 
-bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt)
+bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt, uint8_t verbose)
 {
 
     //Check Header flags
@@ -294,7 +294,7 @@ bool parse_header_little_endian(char *buffer, bool header_valid, uint8_t *identi
     return header_valid;
 }
 
-bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt)
+bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifier_len, uint16_t *extra_header_len, uint32_t *payload_len, uint8_t *payload_fmt, uint8_t verbose)
 {
 
 
@@ -419,12 +419,12 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
             ms_log(0, "Steim-3 integer compression, big-endian\n");
             break;
             //TODO verify this with chad
-        case 30: /* SRO Gain Ranged Format, ?-endian */
+        case 30: /* SRO Gain Ranged Format*/
             ms_log(0, "SRO Gain Ranged Format, ?-endian\n");
             break;
             //TODO verify this with chad
         case 32: /* DWWSSN Format, ?-endian */
-            ms_log(0, "DWWSSN Format, ?-endian\n");
+            ms_log(0, "DWWSSN Format\n");
             break;
         case 53: /* 32-bit integer, little-endian, general compressor */
             ms_log(0, "32-bit integer, little-endian, general compressor\n");

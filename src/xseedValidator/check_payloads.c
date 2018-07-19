@@ -15,7 +15,7 @@
 #include <mseedformat.h>
 
 
-bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payload_len, uint8_t payload_fmt, char* file_name)
+bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payload_len, uint8_t payload_fmt, char* file_name,uint8_t verbose)
 {
 
     //Return value, initial state assumes valid payload
@@ -57,13 +57,16 @@ bool check_payloads(struct warn_options_s *options, FILE *input, uint32_t payloa
     {
         free(buffer);
     }
-    //End of incomplete solution
+    //End of incomplete solution, see prev TODO
 
 
-    //Solution using libmseed builtin functions to:
-    //TODO make theses a command line option
-    bool print_data = true;
-    int verbose = 3;
+    //Solution using libmseed builtin functions to
+
+    bool print_data = false;
+    if(verbose > 2)
+    {
+       print_data = true;
+    }
 
 
     //Decode and check using libmseed's functions
