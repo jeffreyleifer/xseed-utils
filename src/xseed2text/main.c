@@ -18,9 +18,9 @@
 
 //CMD line option structure
 static const struct xseed_option_s args[] = {
-        {'h',    "help", "Usage", NULL, NO_OPTARG},
-        {'f',    "file", "File to validate", NULL, MANDATORY_OPTARG},
-        {'v', "verbose", "Verbosity level", NULL, OPTIONAL_OPTARG},
+        {'h',    "help h", "Usage", NULL, NO_OPTARG},
+        {'f',    "file f", "File to validate", NULL, MANDATORY_OPTARG},
+        {'v', "verbose v", "Verbosity level", NULL, OPTIONAL_OPTARG},
         {  0,         0, 0, 0, 0}};
 
 
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
     }
     if (display_usage > 0 || NULL == file_name)
     {
-        display_help(argv[0], "Program to Print a miniSEED file in human readable format", args);
+        display_help(argv[0], "Program to Print a miniSEED file in human readable format\n", args);
         return display_usage < 2 ? EXIT_FAILURE : EXIT_SUCCESS;
     }
 
@@ -140,7 +140,7 @@ int main(int argc, char **argv)
                 }
             } else //If older miniseed
             {
-                ms_log(2, "Error: Format version not version 3, read as version: %d", msr->formatversion);
+                ms_log(2, "Error: Format version not version 3, read as version: %d\n", msr->formatversion);
                 ms_log(2, "Attepting to parse as format 2");
                 ierr = msr3_unpack_mseed2(msr->record, msr->reclen, &msrOut, flags, verbose);
                 if (ierr > 0)

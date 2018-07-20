@@ -17,9 +17,9 @@
 
 //CMD line option structure
 static const struct xseed_option_s args[] = {
-        {'h',    "help", "Usage", NULL, NO_OPTARG},
-        {'f',    "file", "File to validate", NULL, MANDATORY_OPTARG},
-        {'v', "verbose", "Verbosity level", NULL, OPTIONAL_OPTARG},
+        {'h',    "help h", "Usage", NULL, NO_OPTARG},
+        {'f',    "file f", "File to validate", NULL, MANDATORY_OPTARG},
+        {'v', "verbose v", "Verbosity level", NULL, OPTIONAL_OPTARG},
         {  0,         0, 0, 0, 0}};
 
 
