@@ -28,6 +28,7 @@ add ```-v``` for verbosity level, add ```v```s for more verbose
 Prints the contents of a selected miniseed file in text format to the terminal
 ### Usage
 ```./xseed2text <miniSEED input file>```
+add ```-v``` for verbosity level, add ```v```s for more verbose
 
 ## xSEED2JSON
 Prints the contents of a selected miniseed file in JSON format to the terminal
