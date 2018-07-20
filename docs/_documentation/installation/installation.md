@@ -1,6 +1,6 @@
 ---
 layout: documentation
-category: Installation
+category: Data Validation Tools
 order: 1
 title: Installation
 ---

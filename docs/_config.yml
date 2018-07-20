@@ -59,10 +59,10 @@ client:
     url: "https://iris.edu"
 
 category_order:
-    - 'Installation'
-    - 'Validator'
-    - 'xSEED to Text'
-    - 'xSEED to JSON'
-    - 'xSEED Converter'
     - 'xSEED Reference Sets'
+    - 'Data Validation Tools'
+    
+    
+    
+    
   
