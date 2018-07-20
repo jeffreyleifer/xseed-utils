@@ -22,11 +22,7 @@ All information on the miniSEED file is printed to the terminal
 
 ### Usage:
 ```./xseedvalidator -f <miniSEEDv3 file to validate> -j <JSON schema to validate extra headers against (optional)>```
-
-## xSEED Converter
-Converts a miniSEED file <= v2 to v3 with optional extra header inject via user provided JSON file
-### Usage:
-```./mseedconvert -j <JSON file for extra header injection (optional) -o <Output miniSEEDv3 fileame> <input miniSEED filename>```
+add ```-v``` for verbosity level, add ```v```s for more verbose
 
 ## xSEED2text
 Prints the contents of a selected miniseed file in text format to the terminal
@@ -37,4 +33,5 @@ Prints the contents of a selected miniseed file in text format to the terminal
 Prints the contents of a selected miniseed file in JSON format to the terminal
 ### Usage
 ```./xseed2json <miniSEED input file>```
+add ```-v``` for verbosity, add ```v```s for more verbose
 
