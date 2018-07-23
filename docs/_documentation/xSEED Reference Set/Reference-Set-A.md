@@ -2,7 +2,7 @@
 layout: documentation
 category: xSEED Reference Sets
 order: 2
-title: Reference Set A
+title: Reference Set 1
 
 ---
 

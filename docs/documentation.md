@@ -19,10 +19,20 @@ Changes are being proposed to miniSEED due to identifier limitations for:
 
 However, changing the fundamental identifiers requires changes to key fields in miniSEED that would render it incompatible with the current release (2.4). Such a small yet disruptive change affords the opportunity to evolve to xSEED, a next generation time series data format that addresses a number of historical issues and creates new capability to address future needs.
 
-For more information about xSEED:
+#### More Information About xSEED
 
 - [Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf)
-- Using the menu at left, access documentation for xSEED reference data sets and the utilities that convert and verify the xSEED standard for miniSEED files.
+- Access documentation for xSEED reference data sets:
+  - Reference Data Set A
+  - Reference Data Set B
+  - Reference Data Set C
+- Access documentation for the utilities that convert and verify the xSEED standard for miniSEED files: 
+  - [Validator](https://xseed.pages.isti.com/xseed-utils/documentation/Validator/Introduction/)
+  - [xSEED Converter](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Converter/Introduction/)
+  - [xSEED to JSON](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20JSON/Introduction/)
+  - [xSEED to Text](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Text/Introduction/)
+
+*Note: Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions.*
 
 ### Benefits of Adopting xSEED
 
