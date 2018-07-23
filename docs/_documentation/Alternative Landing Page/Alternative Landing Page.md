@@ -1,14 +1,13 @@
 ---
 layout: documentation
-title: Home
-permalink: /documentation/
+category: Data Validation Tools
+order: 6
+title: Alternative Landing Page
 ---
 
 ## Welcome to xSEED!
 
-## xSeed Preamble
-
-### Background and Context
+### Why xSEED?
 
 Adopted by the [International Federation of Digital Seismograph Networks](http://www.fdsn.org/) (FDSN) in 1987, the SEED format is now the canonical format for passive-source seismic, as well as other types of data. For continuous data collection, archiving, and delivery, the time series and metadata are often handled separately. The time series portion is known as miniSEED. 
 
@@ -19,7 +18,7 @@ Changes are being proposed to miniSEED due to identifier limitations for:
 
 However, changing the fundamental identifiers requires changes to key fields in miniSEED that would render it incompatible with the current release (2.4). Such a small yet disruptive change affords the opportunity to evolve to xSEED, a next generation time series data format that addresses a number of historical issues and creates new capability to address future needs.
 
-For more information about xSEED:
+#### Access More Information About xSEED
 
 - [Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf)
 - Using the menu at left, access documentation for xSEED reference data sets and the utilities that convert and verify the xSEED standard for miniSEED files.
@@ -29,9 +28,8 @@ For more information about xSEED:
 xSEED offers the ability to:
 
 - Convert usage of FDSN time series codes (network, station, location, channel) to a variable length Uniform Resource Name (URN) for enhanced flexibility and to allow nearly unlimited future re-definition
-  * Expansion of the individual network, station and location codes to a maximum of 8 characters.
-
-  * The definition of a time series identifier URN and the individual codes, including an expansion of the codes is documented in a separate document
+  - Expansion of the individual network, station and location codes to a maximum of 8 characters.
+  - The definition of a time series identifier URN and the individual codes, including an expansion of the codes is documented in a separate document
 - Incorporate critical details previously in blockettes (actual sample rate, encoding, microseconds) into the fixed section of the data header
 - Increase sample rate/period representation to a 64-bit floating point value
 - Increase start time resolution to nanoseconds
@@ -44,15 +42,15 @@ xSEED offers the ability to:
 - Add “Recenter” (mass, gimbal, etc.) headers
 - Add “ProvenanceURI” header to identify provenance documentation
 - Replace the blockette structure with flexible extra header construct:
-  * Specify a reserved set of extra headers defined by the FDSN, provide schema for validation
-  * Previous flags and blockette contents defined in reserved extra headers
-  * Allow arbitrary headers to be included in a record
+  - Specify a reserved set of extra headers defined by the FDSN, provide schema for validation
+  - Previous flags and blockette contents defined in reserved extra headers
+  - Allow arbitrary headers to be included in a record
 - Remove the restriction on record length to be powers of 2, allow variable length
 - General compression encodings for fundamental sample types and opaque data
 - Near complete preservation of miniSEED 2.4 data. Information that is not retained is limited to:
-  * Clock model specification per timing exception (current specification only allows a single clock model specification per record)
-  * Blockettes 400 (Beam) & 405 (Beam Delay)
-  * Blockette 2000 (Opaque Data). 
+  - Clock model specification per timing exception (current specification only allows a single clock model specification per record)
+  - Blockettes 400 (Beam) & 405 (Beam Delay)
+  - Blockette 2000 (Opaque Data). 
 
 ### Overview of miniSEED
 
