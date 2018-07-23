@@ -10,8 +10,90 @@ permalink: /documentation/
 
 ### Background and Context
 
-Adopted by the International Federation of Digital Seismograph Networks (FDSN) in 1987, the SEED format has become the canonical format for passive source seismic (and other) data. For continuous data collection, archiving, and delivery, it has become common to handle the time series and metadata separately. [Read the canonical specification for a next generation version format for the time series portion, known as miniSEED](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf).
+Adopted by the [International Federation of Digital Seismograph Networks](http://www.fdsn.org/) (FDSN) in 1987, the SEED format is now the canonical format for passive-source seismic, as well as other types of data. For continuous data collection, archiving, and delivery, the time series and metadata are often handled separately. The time series portion is known as miniSEED. 
 
- The key issues motivating a change to miniSEED 2.4 are limitations with identifiers for a) deployments with a very large number of nodes and b) new instruments and other data source types, e.g. synthetics. Changing the fundamental identifiers requires changes to key fields in miniSEED that render it incompatible with the current release. Such a small, but disruptive change affords the opportunity to address a number of historical issues and create new capability to address future needs.
+Changes are being proposed to miniSEED due to identifier limitations for: 
 
-This repository contains utilities to convert and verify the xSEED standard for miniSEED files.
+- Deployments with a very large number of nodes
+- New instruments and other data source types, e.g., synthetics.
+
+However, changing the fundamental identifiers requires changes to key fields in miniSEED that would render it incompatible with the current release (2.4). Such a small yet disruptive change affords the opportunity to evolve to xSEED, a next generation time series data format that addresses a number of historical issues and creates new capability to address future needs.
+
+For more information about xSEED:
+
+- [Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf)
+- Using the menu at left, access documentation for xSEED reference data sets and the utilities that convert and verify the xSEED standard for miniSEED files.
+
+### Benefits of Adopting xSEED
+
+xSEED offers the ability to:
+
+- Convert usage of FDSN time series codes (network, station, location, channel) to a variable length Uniform Resource Name (URN) for enhanced flexibility and to allow nearly unlimited future re-definition
+  * Expansion of the individual network, station and location codes to a maximum of 8 characters.
+
+  * The definition of a time series identifier URN and the individual codes, including an expansion of the codes is documented in a separate document
+- Incorporate critical details previously in blockettes (actual sample rate, encoding, microseconds) into the fixed section of the data header
+- Increase sample rate/period representation to a 64-bit floating point value
+- Increase start time resolution to nanoseconds
+- Specify fixed byte order (little endian) for the binary portions of the headers and define a byte order for each data encoding
+- Drop legacy data encodings and reserve their values so they are not used again in the future
+- Add a format version
+- Add a data publication version
+- Add CRC field for validating integrity of record
+- Add a “mass position off scale” flag
+- Add “Recenter” (mass, gimbal, etc.) headers
+- Add “ProvenanceURI” header to identify provenance documentation
+- Replace the blockette structure with flexible extra header construct:
+  * Specify a reserved set of extra headers defined by the FDSN, provide schema for validation
+  * Previous flags and blockette contents defined in reserved extra headers
+  * Allow arbitrary headers to be included in a record
+- Remove the restriction on record length to be powers of 2, allow variable length
+- General compression encodings for fundamental sample types and opaque data
+- Near complete preservation of miniSEED 2.4 data. Information that is not retained is limited to:
+  * Clock model specification per timing exception (current specification only allows a single clock model specification per record)
+  * Blockettes 400 (Beam) & 405 (Beam Delay)
+  * Blockette 2000 (Opaque Data). 
+
+### Overview of miniSEED
+
+#### Purpose
+
+The International Federation of Digital Seismograph Networks (FDSN)1 defines miniSEED as a *data format for digital time series and related information*. Intended uses are primarily data collection, archiving, and exchange of seismological data. Support is also included for time series data for other geophysical-related measurements such as pressure, temperature, tilt, etc. In addition to the time series, supported functionality includes storage of related state-of-health and parameters documenting the state of the recording system. The FDSN metadata counterpart of miniSEED is [StationXML](http://www.fdsn.org/xml/station/), which is used to describe characteristics needed to interpret the data such as location, instrument response, etc.
+
+#### Background
+
+The [Standard for the Exchange of Earthquake Data](http://www.fdsn.org/publications/) (SEED)3 was adopted by the FDSN in the 1980s and has served as the dominant standard for seismological data archiving and exchange for decades. This specification defines a format to store both time series and a rich set of related metadata. In 1992, changes in the SEED format were adopted to officially support “data only” SEED, known as miniSEED. This specification is an evolution of miniSEED and is an extension on what was specified in SEED version 2.4.
+
+#### General Structure
+
+The fundamental unit of the format is a data record. A time series is commonly stored and exchanged as a sequence of these records. Each record is independently usable even when presented in a sequence. There are data encodings for integers, floats, text or compressed data samples. To limit problems with timing system drift & resolution as well as practical issues of subsetting & resource limitation for readers of the data, it is recommended that typical record lengths for raw data generation and archiving be in the range of 256 and 4096 bytes.
+
+#### Record Layout and Fields
+
+A record is composed of a header followed by a time series data payload. The byte order of binary fields in the header must be least significant byte first (little endian).
+
+The total length of a record is variable and is the sum of 40 (length of fixed section of header), field 10 (length of identifier), field 11 (length of extra headers), field 12 (length of payload).
+
+| Field | Field Name                       | Type    | Length | Offset                   | Content        |
+| ----- | -------------------------------- | ------- | ------ | ------------------------ | -------------- |
+| 1     | Record header indicator ('MS')   | CHAR    | 2      | 0                        | ASCII 'MS'     |
+| 2     | Format version (3)               | UINT8   | 1      | 2                        |                |
+| 3     | Flags                            | UINT8   | 1      | 3                        |                |
+|       | Record Start Time                |         |        |                          |                |
+| 4a    | Nanosecond (0 - 999999999)       | UINT32  | 4      | 4                        |                |
+| 4b    | Year (0 - 65535)                 | UINT16  | 2      | 8                        |                |
+| 4c    | Day-of-year ( 1 - 366)           | UINT16  | 2      | 10                       |                |
+| 4d    | Hour (0 - 23)                    | UINT8   | 1      | 12                       |                |
+| 4e    | Minute (0 - 59)                  | UINT8   | 1      | 13                       |                |
+| 4f    | Second (0 - 60)                  | UINT8   | 1      | 14                       |                |
+| 5     | Data encoding format             | UINT8   | 1      | 15                       |                |
+| 6     | Sample rate/period               | FLOAT64 | 8      | 16                       |                |
+| 7     | Number of samples                | UINT32  | 4      | 24                       |                |
+| 8     | CRC of the record                | UINT32  | 4      | 28                       |                |
+| 9     | Data publication version         | UINT8   | 1      | 32                       |                |
+| 10    | Length of identifier in bytes    | UINT8   | 1      | 33                       |                |
+| 11    | Length of extra headers in bytes | UINT16  | 2      | 34                       |                |
+| 12    | Length of data payload in bytes  | UINT32  | 2      | 36                       |                |
+| 13    | Time series identifier           | CHAR    | V      | 40                       | URN identifier |
+| 14    | Extra header fields              | JSON    | V      | 40 + field 10            |                |
+| 15    | Data payload                     | encoded | V      | 40 + field 10 + field 11 |                |
