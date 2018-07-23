@@ -23,16 +23,16 @@ However, changing the fundamental identifiers requires changes to key fields in 
 
 - [Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf)
 - Access documentation for xSEED reference data sets:
-  - Reference Data Set 1: Steim2 encoding, 500 samples, no extra headers
-  - Reference Data Set 2: Data Set #1 with Time Quality, Event Detection and Time Correction extra headers
-  - Reference Data Set 3: Data Set #2 with non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
+  - [Reference Data Set 1](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-1/): Steim2 encoding, 500 samples, no extra headers
+  - [Reference Data Set 2](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-2/): Data Set #1 with Time Quality, Event Detection and Time Correction extra headers
+  - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Data Set #2 with non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
 - Access documentation for the utilities that convert and verify the xSEED standard for miniSEED files: 
   - [Validator](https://xseed.pages.isti.com/xseed-utils/documentation/Validator/Introduction/)
   - [xSEED Converter](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Converter/Introduction/)
   - [xSEED to JSON](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20JSON/Introduction/)
   - [xSEED to Text](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Text/Introduction/)
 
-*Note: Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions.*
+**_Note:_** Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions.*
 
 ### Benefits of Adopting xSEED
 
