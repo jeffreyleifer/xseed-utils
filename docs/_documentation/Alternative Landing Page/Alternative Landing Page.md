@@ -2,7 +2,7 @@
 layout: documentation
 category: Data Validation Tools
 order: 6
-title: Alternative Landing Page
+title: 
 ---
 
 ## Welcome to xSEED!
@@ -18,7 +18,39 @@ Changes are being proposed to miniSEED due to identifier limitations for:
 
 However, changing the fundamental identifiers requires changes to key fields in miniSEED that would render it incompatible with the current release (2.4). Such a small yet disruptive change affords the opportunity to evolve to xSEED, a next generation time series data format that addresses a number of historical issues and creates new capability to address future needs.
 
-#### More Information About xSEED
+### Benefits of xSEED
+
+xSEED offers the ability to:
+
+- Convert usage of FDSN time series codes (network, station, location, channel) to a variable length Uniform Resource Name (URN) for enhanced flexibility and to allow nearly unlimited future re-definition.
+  - Expansion of the individual network, station and location codes to a maximum of 8 characters.
+  - The definition of a time series identifier URN and the individual codes, including an expansion of the codes is documented in a separate document.
+- Incorporate critical details previously in blockettes (actual sample rate, encoding, microseconds) into the fixed section of the data header.
+- Increase sample rate/period representation to a 64-bit floating point value.
+- Increase start time resolution to nanoseconds.
+- Specify fixed byte order (little endian) for the binary portions of the headers and define a byte order for each data encoding.
+- Drop legacy data encodings and reserve their values so they are not used again in the future.
+- Add a format version.
+- Add a data publication version.
+- Add CRC field for validating integrity of record.
+- Add a “mass position off scale” flag.
+- Add “Recenter” (mass, gimbal, etc.) headers.
+- Add “ProvenanceURI” header to identify provenance documentation.
+- Replace the blockette structure with flexible extra header construct:
+  - Specify a reserved set of extra headers defined by the FDSN and provide schema for validation
+  - Previous flags and blockette contents defined in reserved extra headers
+  - Allow arbitrary headers to be included in a record.
+- Remove the restriction on record length to be powers of 2 and allow variable length.
+
+Additional benefits include:
+
+- General compression encodings for fundamental sample types and opaque data.
+- Near complete preservation of miniSEED 2.4 data. Information that is not retained is limited to:
+  - Clock model specification per timing exception (current specification only allows a single clock model specification per record)
+  - Blockettes 400 (Beam) & 405 (Beam Delay)
+  - Blockette 2000 (Opaque Data). 
+
+### More Information About xSEED
 
 - [Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf)
 - Access documentation for the utilities that convert and verify the xSEED standard for miniSEED files: 
@@ -32,35 +64,6 @@ However, changing the fundamental identifiers requires changes to key fields in 
   - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Data Set #2 with non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
 
 **_Note:_** Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions.*
-
-### Benefits of Adopting xSEED
-
-xSEED offers the ability to:
-
-- Convert usage of FDSN time series codes (network, station, location, channel) to a variable length Uniform Resource Name (URN) for enhanced flexibility and to allow nearly unlimited future re-definition
-  - Expansion of the individual network, station and location codes to a maximum of 8 characters.
-  - The definition of a time series identifier URN and the individual codes, including an expansion of the codes is documented in a separate document
-- Incorporate critical details previously in blockettes (actual sample rate, encoding, microseconds) into the fixed section of the data header
-- Increase sample rate/period representation to a 64-bit floating point value
-- Increase start time resolution to nanoseconds
-- Specify fixed byte order (little endian) for the binary portions of the headers and define a byte order for each data encoding
-- Drop legacy data encodings and reserve their values so they are not used again in the future
-- Add a format version
-- Add a data publication version
-- Add CRC field for validating integrity of record
-- Add a “mass position off scale” flag
-- Add “Recenter” (mass, gimbal, etc.) headers
-- Add “ProvenanceURI” header to identify provenance documentation
-- Replace the blockette structure with flexible extra header construct:
-  - Specify a reserved set of extra headers defined by the FDSN, provide schema for validation
-  - Previous flags and blockette contents defined in reserved extra headers
-  - Allow arbitrary headers to be included in a record
-- Remove the restriction on record length to be powers of 2, allow variable length
-- General compression encodings for fundamental sample types and opaque data
-- Near complete preservation of miniSEED 2.4 data. Information that is not retained is limited to:
-  - Clock model specification per timing exception (current specification only allows a single clock model specification per record)
-  - Blockettes 400 (Beam) & 405 (Beam Delay)
-  - Blockette 2000 (Opaque Data). 
 
 ### Overview of miniSEED
 
