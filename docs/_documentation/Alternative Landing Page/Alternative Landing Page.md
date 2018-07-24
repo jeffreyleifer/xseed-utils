@@ -63,7 +63,7 @@ Additional benefits include:
   - [Reference Data Set 2](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-2/): Data Set #1 with Time Quality, Event Detection and Time Correction extra headers
   - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Data Set #2 with non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
 
-**_Note:_** Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions.*
+**_Note:_** *Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions*.
 
 ### Overview of miniSEED
 

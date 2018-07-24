@@ -63,7 +63,7 @@ Additional benefits include:
   - [xSEED to JSON](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20JSON/Introduction/)
   - [xSEED to Text](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Text/Introduction/)
 
-**_Note:_** Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions.*
+**_Note:_** *Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions.*
 
 ### Overview of miniSEED
 
