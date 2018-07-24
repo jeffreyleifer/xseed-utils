@@ -7,7 +7,7 @@ title: Installation
 
 
 
-### Instructions
+## Instructions
 
 To install the utilities that convert and verify the xSEED standard for miniSEED files: 
 
@@ -16,7 +16,7 @@ To install the utilities that convert and verify the xSEED standard for miniSEED
 
 **_Note:_** *Internet connection is required.*
 
-### Dependencies
+## Dependencies
 
 The following dependencies are automatically installed via cmake:
 
