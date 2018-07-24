@@ -54,9 +54,9 @@ Additional benefits include:
 
 - [Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf)
 - Access documentation for xSEED reference data sets:
-  - [Reference Data Set 1](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-1/): Steim2 encoding, 500 samples, no extra headers
-  - [Reference Data Set 2](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-2/): Data Set #1 with Time Quality, Event Detection and Time Correction extra headers
-  - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Data Set #2 with non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
+  - [Reference Data Set 1](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-1/): Contains Steim2 encoding, 500 samples, no extra headers
+  - [Reference Data Set 2](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-2/): Includes Data Set #1, plus Time Quality, Event Detection and Time Correction extra headers
+  - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Includes Data Set #2, plus non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
 - Access documentation for the utilities that convert and verify the xSEED standard for miniSEED files: 
   - [Validator](https://xseed.pages.isti.com/xseed-utils/documentation/Validator/Introduction/)
   - [xSEED Converter](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Converter/Introduction/)
