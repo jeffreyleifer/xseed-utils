@@ -7,8 +7,10 @@ title: xSEED to Text
 
 ## Introduction
 
-xSEED to Text prints the contents of a selected miniSEED file in text format to the terminal.
+xSEED to Text creates a human-readable version of xSEED data files and displays the header information in msr_print() formatted text. The contents of a selected miniSEED file are printed to the terminal in text format.
 
-## Usage
+## Usage Instructions
+
+To use xSEED to Text, run the following script:
 
 ```./xseed2text <miniSEED input file>```
