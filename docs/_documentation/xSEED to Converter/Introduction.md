@@ -5,7 +5,7 @@ order: 3
 title: xSEED Converter
 ---
 
-## Introduction
+## Description
 
 xSEED Converter converts a miniSEED file to xSEED: <= v2 to v3 with optional extra header inject via a user-provided JSON file.
 

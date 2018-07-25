@@ -5,6 +5,23 @@ order: 4
 title: Reference Set 3
 ---
 
+## Description
+
+Reference Set 3 contains:
+
+- Steim2 encoding
+- 500 samples
+- No extra headers
+- Time Quality, Event Detection, and Time Correction extra headers
+- Non-FDSN headers
+- Root objects for Manufacturer123 and OperatorXYZ
+
+## Actual Data File
+
+Access the actual Reference Set 3 data file.
+
+## Reference Set 3 in Text Format
+
 Detected record length of 5469 bytes
 
 Byte swapping NOT needed for unpacking of header

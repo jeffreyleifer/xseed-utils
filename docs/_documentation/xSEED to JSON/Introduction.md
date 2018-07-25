@@ -5,7 +5,7 @@ order: 4
 title: xSEED to JSON
 ---
 
-## Introduction
+## Description
 
 xSEED to JSON prints the contents of a selected miniseed file to the terminal in JSON format.
 

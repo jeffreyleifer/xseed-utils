@@ -5,6 +5,21 @@ order: 3
 title: Reference Set 2
 ---
 
+## Description
+
+Reference Set 2 contains:
+
+- Steim2 encoding
+- 500 samples
+- No extra headers
+- Time Quality, Event Detection, and Time Correction extra headers
+
+## Actual Data File
+
+Access the actual Reference Set 2 data file.
+
+## Reference Set 2 in Text Format
+
 XFDSN:XX_TEST__L_H_Z, 1, 5123 (format: 3)
 
              start time: 2012,001,00:00:00.000000

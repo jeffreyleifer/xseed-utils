@@ -5,6 +5,20 @@ order: 2
 title: Reference Set 1
 ---
 
+## Description
+
+Reference Set 1 contains:
+
+- Steim2 encoding
+- 500 samples
+- No extra headers
+
+## Actual Data File
+
+Access the actual Reference Set 1 data file.
+
+## Reference Set 1 in Text Format
+
 Detected record length of 956 bytes
 
 Byte swapping NOT needed for unpacking of header
