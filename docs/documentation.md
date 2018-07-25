@@ -6,16 +6,14 @@ permalink: /documentation/
 
 ## Welcome to xSEED!
 
-### xSeed Preamble
-
-### Background and Context
+### Why xSEED?
 
 Adopted by the [International Federation of Digital Seismograph Networks](http://www.fdsn.org/) (FDSN) in 1987, the SEED format is now the canonical format for passive-source seismic, as well as other types of data. For continuous data collection, archiving, and delivery, the time series and metadata are often handled separately. The time series portion is known as miniSEED. 
 
 Changes are being proposed to miniSEED due to identifier limitations for: 
 
- - Deployments with a very large number of nodes
- - New instruments and other data source types, e.g., synthetics.
+- Deployments with a very large number of nodes
+- New instruments and other data source types, e.g., synthetics.
 
 However, changing the fundamental identifiers requires changes to key fields in miniSEED that would render it incompatible with the current release (2.4). Such a small yet disruptive change affords the opportunity to evolve to xSEED, a next generation time series data format that addresses a number of historical issues and creates new capability to address future needs.
 
@@ -38,32 +36,33 @@ xSEED offers the ability to:
 - Add “Recenter” (mass, gimbal, etc.) headers.
 - Add “ProvenanceURI” header to identify provenance documentation.
 - Replace the blockette structure with flexible extra header construct:
-  * Specify a reserved set of extra headers defined by the FDSN and provide schema for validation
-  * Previous flags and blockette contents defined in reserved extra headers
-  * Allow arbitrary headers to be included in a record.
+  - Specify a reserved set of extra headers defined by the FDSN and provide schema for validation
+  - Previous flags and blockette contents defined in reserved extra headers
+  - Allow arbitrary headers to be included in a record.
 - Remove the restriction on record length to be powers of 2 and allow variable length.
 
 Additional benefits include:
+
 - General compression encodings for fundamental sample types and opaque data.
 - Near complete preservation of miniSEED 2.4 data. Information that is not retained is limited to:
-  * Clock model specification per timing exception (current specification only allows a single clock model specification per record)
-  * Blockettes 400 (Beam) & 405 (Beam Delay)
-  * Blockette 2000 (Opaque Data). 
+  - Clock model specification per timing exception (current specification only allows a single clock model specification per record)
+  - Blockettes 400 (Beam) & 405 (Beam Delay)
+  - Blockette 2000 (Opaque Data). 
 
 ### More Information About xSEED
 
 - [Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf)
-- Access documentation for xSEED reference data sets:
-  - [Reference Data Set 1](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-1/): Contains Steim2 encoding, 500 samples, no extra headers
-  - [Reference Data Set 2](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-2/): Includes Data Set #1, plus Time Quality, Event Detection and Time Correction extra headers
-  - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Includes Data Set #2, plus non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
 - Access documentation for the utilities that convert and verify the xSEED standard for miniSEED files: 
   - [Validator](https://xseed.pages.isti.com/xseed-utils/documentation/Validator/Introduction/)
   - [xSEED Converter](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Converter/Introduction/)
   - [xSEED to JSON](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20JSON/Introduction/)
   - [xSEED to Text](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Text/Introduction/)
+- Access documentation for xSEED reference data sets:
+  - [Reference Data Set 1](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-1/): Contains Steim2 encoding, 500 samples, no extra headers
+  - [Reference Data Set 2](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-2/): Includes Data Set #1, plus Time Quality, Event Detection and Time Correction extra headers
+  - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Includes Data Set #2, plus non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
 
-**_Note:_** *Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions.*
+**_Note:_** *Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions*.
 
 ### Overview of miniSEED
 
@@ -111,14 +110,9 @@ The total length of a record is variable and is the sum of 40 (length of fixed s
 
 All length values are specified in bytes, which are assumed to be 8-bits in length.   Data types for each field are defined as follows:
 
-**CHAR**    - ASCII encoded character data.
-
-**UINT8**   - Unsigned 8-bit integer.
-
-**UINT16**  - Unsigned 16-bit integer (little endian).
-
-**UINT32**  - Unsigned 32-bit integer (little endian).
-
-**FLOAT64** - IEEE-754 64-bit floating point number (little endian).
-
-**JSON**    - JSON Data Interchange Standard as defined by [ECMA-404](https://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+- **CHAR**    - ASCII encoded character data.
+- **UINT8**   - Unsigned 8-bit integer.
+- **UINT16**  - Unsigned 16-bit integer (little endian).
+- **UINT32**  - Unsigned 32-bit integer (little endian).
+- **FLOAT64** - IEEE-754 64-bit floating point number (little endian).
+- **JSON**    - JSON Data Interchange Standard as defined by [ECMA-404](https://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).

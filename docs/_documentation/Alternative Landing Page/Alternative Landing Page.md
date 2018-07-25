@@ -2,12 +2,14 @@
 layout: documentation
 category: Data Validation Tools
 order: 6
-title: 
+title: Alternative Landing Page
 ---
 
 ## Welcome to xSEED!
 
-### Why xSEED?
+### xSeed Preamble
+
+### Background and Context
 
 Adopted by the [International Federation of Digital Seismograph Networks](http://www.fdsn.org/) (FDSN) in 1987, the SEED format is now the canonical format for passive-source seismic, as well as other types of data. For continuous data collection, archiving, and delivery, the time series and metadata are often handled separately. The time series portion is known as miniSEED. 
 
@@ -53,17 +55,17 @@ Additional benefits include:
 ### More Information About xSEED
 
 - [Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf)
+- Access documentation for xSEED reference data sets:
+  - [Reference Data Set 1](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-1/): Contains Steim2 encoding, 500 samples, no extra headers
+  - [Reference Data Set 2](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-2/): Includes Data Set #1, plus Time Quality, Event Detection and Time Correction extra headers
+  - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Includes Data Set #2, plus non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
 - Access documentation for the utilities that convert and verify the xSEED standard for miniSEED files: 
   - [Validator](https://xseed.pages.isti.com/xseed-utils/documentation/Validator/Introduction/)
   - [xSEED Converter](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Converter/Introduction/)
   - [xSEED to JSON](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20JSON/Introduction/)
   - [xSEED to Text](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Text/Introduction/)
-- Access documentation for xSEED reference data sets:
-  - [Reference Data Set 1](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-1/): Contains Steim2 encoding, 500 samples, no extra headers
-  - [Reference Data Set 2](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-2/): Includes Data Set #1, plus Time Quality, Event Detection and Time Correction extra headers
-  - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Includes Data Set #2, plus non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
 
-**_Note:_** *Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions*.
+**_Note:_** *Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions.*
 
 ### Overview of miniSEED
 
@@ -111,14 +113,9 @@ The total length of a record is variable and is the sum of 40 (length of fixed s
 
 All length values are specified in bytes, which are assumed to be 8-bits in length.   Data types for each field are defined as follows:
 
-**CHAR**    - ASCII encoded character data.
-
-**UINT8**   - Unsigned 8-bit integer.
-
-**UINT16**  - Unsigned 16-bit integer (little endian).
-
-**UINT32**  - Unsigned 32-bit integer (little endian).
-
-**FLOAT64** - IEEE-754 64-bit floating point number (little endian).
-
-**JSON**    - JSON Data Interchange Standard as defined by [ECMA-404](https://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+- **CHAR**    - ASCII encoded character data.
+- **UINT8**   - Unsigned 8-bit integer.
+- **UINT16**  - Unsigned 16-bit integer (little endian).
+- **UINT32**  - Unsigned 32-bit integer (little endian).
+- **FLOAT64** - IEEE-754 64-bit floating point number (little endian).
+- **JSON**    - JSON Data Interchange Standard as defined by [ECMA-404](https://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
