@@ -24,7 +24,7 @@ Validator checks a miniSEEDv3 file for:
 
 ## Typical Usage
 
-To use Validator, execute the following command:
+To use the Validator utility, execute the following command:
 
 ```./xseedvalidator -f <miniSEEDv3 file to validate> -j <JSON schema to validate extra headers against (optional)>```
 
