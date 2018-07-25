@@ -22,6 +22,8 @@ Validator checks a miniSEEDv3 file for:
 
 
 
+
+
 ## Typical Usage
 
 To use the Validator utility, execute the following command:
