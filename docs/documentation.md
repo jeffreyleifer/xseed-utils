@@ -6,7 +6,9 @@ permalink: /documentation/
 
 ## Welcome to xSEED!
 
-### Why xSEED?
+### xSeed Preamble
+
+### Background and Context
 
 Adopted by the [International Federation of Digital Seismograph Networks](http://www.fdsn.org/) (FDSN) in 1987, the SEED format is now the canonical format for passive-source seismic, as well as other types of data. For continuous data collection, archiving, and delivery, the time series and metadata are often handled separately. The time series portion is known as miniSEED. 
 
@@ -52,17 +54,17 @@ Additional benefits include:
 ### More Information About xSEED
 
 - [Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf)
+- Access documentation for xSEED reference data sets:
+  - [Reference Data Set 1](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-1/): Contains Steim2 encoding, 500 samples, no extra headers
+  - [Reference Data Set 2](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-2/): Includes Data Set #1, plus Time Quality, Event Detection and Time Correction extra headers
+  - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Includes Data Set #2, plus non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
 - Access documentation for the utilities that convert and verify the xSEED standard for miniSEED files: 
   - [Validator](https://xseed.pages.isti.com/xseed-utils/documentation/Validator/Introduction/)
   - [xSEED Converter](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Converter/Introduction/)
   - [xSEED to JSON](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20JSON/Introduction/)
   - [xSEED to Text](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Text/Introduction/)
-- Access documentation for xSEED reference data sets:
-  - [Reference Data Set 1](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-1/): Contains Steim2 encoding, 500 samples, no extra headers
-  - [Reference Data Set 2](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-2/): Includes Data Set #1, plus Time Quality, Event Detection and Time Correction extra headers
-  - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Includes Data Set #2, plus non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
 
-**_Note:_** *Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions*.
+**_Note:_** *Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions.*
 
 ### Overview of miniSEED
 
