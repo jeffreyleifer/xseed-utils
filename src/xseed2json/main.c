@@ -29,8 +29,6 @@ MS3Record *msrOut = NULL;
 int main(int argc, char **argv)
 {
 
-
-
     MS3Record *msr = NULL;
 
     JSON_Status ierr;
@@ -94,7 +92,7 @@ int main(int argc, char **argv)
     }
     if (display_usage > 0 || NULL == file_name)
     {
-        display_help(argv[0], "Program to Print a miniSEED file in JSON format", args);
+        display_help(argv[0], "Program to Print a xSEED file in JSON format", args);
         return display_usage < 2 ? EXIT_FAILURE : EXIT_SUCCESS;
     }
 

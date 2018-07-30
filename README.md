@@ -18,21 +18,21 @@ Checks xSEED file for:
 2. Valid payload
 3. Valid extra header via user provided JSON schema (optional)
 
-All information on the miniSEED file is printed to the terminal
+All information on the xSEED file is printed to the terminal
 
 ### Usage:
 ```./xseedvalidator -f <xSEED file to validate> -j <JSON schema to validate extra headers against (optional)>```
 add ```-v``` for verbosity level, add ```v```s for more verbose
 
 ## xSEED2text
-Prints the contents of a selected miniSEED or xSEED file in text format to the terminal
+Prints the contents of a selected xSEED file in text format to the terminal
 ### Usage
-```./xseed2text <miniSEED or xSEED input file>```
+```./xseed2text <xSEED input file>```
 add ```-v``` for verbosity level, add ```v```s for more verbose
 
 ## xSEED2JSON
-Prints the contents of a selected miniSEED or xSEED file in JSON format to the terminal
+Prints the contents of a selected xSEED file in JSON format to the terminal
 ### Usage
-```./xseed2json <miniSEED or xSEED input file>```
+```./xseed2json <xSEED input file>```
 add ```-v``` for verbosity, add ```v```s for more verbose
 

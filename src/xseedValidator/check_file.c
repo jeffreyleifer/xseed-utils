@@ -11,9 +11,9 @@
 /*! @brief Perform all verification test
  *
  *  @param[in] options -W cmd line warn options (currently not implemented)
- *  @param[in] input file pointer to miniSEED file
+ *  @param[in] input file pointer to xSEED file
  *  @param[in] schema_file_name json file path parsed from cmd line
- *  @param[in] file_name miniSEED file path parsed from cmd line
+ *  @param[in] file_name xSEED file path parsed from cmd line
  *
  */
 bool check_file (struct warn_options_s *options, FILE *input, char *schema_file_name, char *file_name, uint8_t verbose)

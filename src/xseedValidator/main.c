@@ -92,7 +92,7 @@ int main(int argc, char **argv)
     }
     if (display_usage > 0 || NULL == file_name)
     {
-        display_help(argv[0], "Program to Validate mini seed format", args);
+        display_help(argv[0], "Program to Validate xSEED format files", args);
         return display_usage < 2 ? EXIT_FAILURE : EXIT_SUCCESS;
     }
 
@@ -116,10 +116,10 @@ int main(int argc, char **argv)
     //TODO if extra header schema validation fails, this still registers as a success
     if(valid)
     {
-        printf("xseedValidator SUCCESS, the file %s is VALID miniSEEDv3\n\n",file_name);
+        printf("xseedValidator SUCCESS, the file %s is VALID xSEED\n\n",file_name);
     } else
     {
-        printf("xseedValidator FAILED, the file %s is NOT VALID miniSEEDv3\n\n",file_name);
+        printf("xseedValidator FAILED, the file %s is NOT VALID xSEED\n\n",file_name);
     }
 
     if (file_name)
