@@ -33,7 +33,9 @@ XFDSN:XX_TEST__L_H_Z: Unpacking Steim2 data frames
 
 XFDSN:XX_TEST__L_H_Z, 1, 956 (format: 3)
 
-             start time: 2012,001,00:00:00.000000
+             <span style="color:#fff; font-family: 'Courier'; font-size: 4em;">
+
+start time: 2012,001,00:00:00.000000
 
       number of samples: 500
 
@@ -49,6 +51,7 @@ XFDSN:XX_TEST__L_H_Z, 1, 956 (format: 3)
 
        payload encoding: STEIM 2 Compression (val: 11)
 
+</span>
 Unpacking data for verification
 
 Data unpacked successfully

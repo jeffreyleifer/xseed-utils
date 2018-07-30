@@ -19,7 +19,9 @@ Changes are being proposed to miniSEED due to identifier limitations for:
 
 However, changing the fundamental identifiers requires changes to key fields in miniSEED that would render it incompatible with the current release (2.4). Such a small yet disruptive change affords the opportunity to evolve to xSEED, a next generation time series data format that addresses a number of historical issues and creates new capability to address future needs.
 
-### Benefits of xSEED
+[Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf).
+
+### xSEED Benefits
 
 xSEED offers the ability to:
 
@@ -51,20 +53,22 @@ Additional benefits include:
   - Blockettes 400 (Beam) & 405 (Beam Delay)
   - Blockette 2000 (Opaque Data). 
 
-### More Information About xSEED
+### xSEED Reference Data Set
 
-- [Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf)
-- Access documentation for xSEED reference data sets:
-  - [Reference Data Set 1](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-1/): Contains Steim2 encoding, 500 samples, no extra headers
-  - [Reference Data Set 2](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-2/): Includes Data Set #1, plus Time Quality, Event Detection and Time Correction extra headers
-  - [Reference Data Set 3](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Reference-Set-3/): Includes Data Set #2, plus non-FDSN headers, with root objects for Manufacturer123 and OperatorXYZ
-- Access documentation for the utilities that convert and verify the xSEED standard for miniSEED files: 
-  - [Validator](https://xseed.pages.isti.com/xseed-utils/documentation/Validator/Introduction/)
-  - [xSEED Converter](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Converter/Introduction/)
-  - [xSEED to JSON](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20JSON/Introduction/)
-  - [xSEED to Text](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Text/Introduction/)
+The xSEED Reference Data Set is a reference data set used for developing and testing software. Intended for use by implementers, data centers, and users of the data format, the reference data set illustrates the usage of all key aspects of the data.
 
-**_Note:_** *Use the sidebar navigation menu to access the above xSEED data sets and utilities as well as installation instructions.*
+For more information about the xSEED Reference Data Set, see the [xSEED Data Reference Set Overview](https://xseed.pages.isti.com/xseed-utils/documentation/Overview/)
+
+### xSEED Utilities
+
+Access documentation for the utilities that convert and verify the xSEED standard for miniSEED files: 
+
+- [Validator](https://xseed.pages.isti.com/xseed-utils/documentation/Validator/Introduction/)
+- [xSEED Converter](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Converter/Introduction/)
+- [xSEED to JSON](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20JSON/Introduction/)
+- [xSEED to Text](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Text/Introduction/)
+
+**_Note:_** *You may also use the sidebar navigation menu to navigate to the Reference Data Set Overview and Examples, utilities, and installation instructions.*
 
 ### Overview of miniSEED
 
