@@ -1,6 +1,6 @@
 ---
 layout: documentation
-category: xSEED Reference Sets
+category: xSEED Reference Set
 order: 1
 title: Overview
 ---

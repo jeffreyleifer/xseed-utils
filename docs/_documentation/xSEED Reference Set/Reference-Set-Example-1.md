@@ -1,13 +1,13 @@
 ---
 layout: documentation
-category: xSEED Reference Sets
+category: xSEED Reference Set
 order: 2
-title: Reference Set 1
+title: Reference Set Example 1
 ---
 
 ## Description
 
-Reference Set 1 contains:
+Reference Set Example 1 contains:
 
 - Steim2 encoding
 - 500 samples
@@ -19,6 +19,7 @@ Access the actual Reference Set 1 data file.
 
 ## Reference Set 1 in Text Format
 
+```
 Detected record length of 956 bytes
 
 Byte swapping NOT needed for unpacking of header
@@ -32,8 +33,6 @@ XFDSN:XX_TEST__L_H_Z: Unpacking 500 samples
 XFDSN:XX_TEST__L_H_Z: Unpacking Steim2 data frames
 
 XFDSN:XX_TEST__L_H_Z, 1, 956 (format: 3)
-
-             <span style="color:#fff; font-family: 'Courier'; font-size: 4em;">
 
 start time: 2012,001,00:00:00.000000
 
@@ -50,8 +49,7 @@ start time: 2012,001,00:00:00.000000
     data payload length: 896 bytes
 
        payload encoding: STEIM 2 Compression (val: 11)
-
-</span>
+       
 Unpacking data for verification
 
 Data unpacked successfully
@@ -222,4 +220,5 @@ Data unpacked successfully
 
    -175686     -198036     -213168     -220164     -218401     -207588  
 
-   -187799     -159476  
+   -187799     -159476
+```

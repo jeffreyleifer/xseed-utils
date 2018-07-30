@@ -1,32 +1,48 @@
 ---
 layout: documentation
-category: xSEED Reference Sets
-order: 4
-title: Reference Set 3
+category: xSEED Reference Set
+order: 3
+title: Reference Set Example 2
 ---
 
 ## Description
 
-Reference Set 3 contains:
+Reference Set Example 2 contains:
 
 - Steim2 encoding
 - 500 samples
-- No extra headers
-- Time Quality, Event Detection, and Time Correction extra headers
-- Non-FDSN headers
-- Root objects for Manufacturer123 and OperatorXYZ
+- FDSN extra headers:
+   - Time Quality
+   - Event Detection
+   - Time Correction
 
 ## Actual Data File
 
-Access the actual Reference Set 3 data file.
+Access the actual Reference Set 2 data file.
 
-## Reference Set 3 in Text Format
+## Reference Set 2 in Text Format
 
-Detected record length of 5469 bytes
+XFDSN:XX_TEST__L_H_Z, 1, 5123 (format: 3)
+
+             start time: 2012,001,00:00:00.000000
+
+      number of samples: 500
+
+       sample rate (Hz): 1
+
+                    CRC: 0x71BD6A6B
+
+    extra header length: 515 bytes
+
+    data payload length: 4548 bytes
+
+       payload encoding: STEIM 2 Compression (val: 11)
+
+Detected record length of 5123 bytes
 
 Byte swapping NOT needed for unpacking of header
 
-Read record length of 5469 bytes
+Read record length of 5123 bytes
 
 Byte swapping NOT needed for unpacking of header
 
@@ -34,7 +50,7 @@ XFDSN:XX_TEST__L_H_Z: Unpacking 500 samples
 
 XFDSN:XX_TEST__L_H_Z: Unpacking Steim2 data frames
 
-XFDSN:XX_TEST__L_H_Z, 1, 5469 (format: 3)
+XFDSN:XX_TEST__L_H_Z, 1, 5123 (format: 3)
 
              start time: 2012,001,00:00:00.000000
 
@@ -44,11 +60,11 @@ XFDSN:XX_TEST__L_H_Z, 1, 5469 (format: 3)
 
                   flags: [00000000] 8 bits
 
-                    CRC: 0x9B0F7A16
+                    CRC: 0x71BD6A6B
 
-    extra header length: 688 bytes
+    extra header length: 515 bytes
 
-    data payload length: 4721 bytes
+    data payload length: 4548 bytes
 
        payload encoding: STEIM 2 Compression (val: 11)
 
@@ -131,30 +147,6 @@ XFDSN:XX_TEST__L_H_Z, 1, 5469 (format: 3)
                       }
 
                     ]
-
-                  }
-
-                },
-
-                "OperatorXYZ": {
-
-                  "DSP": {
-
-                    "PeakRMS": 340,
-
-                    "RMSWindow": 23
-
-                  }
-
-                },
-
-                "Manufacturer123": {
-
-                  "Metadata": {
-
-                    "FilamentCurrent": 5000,
-
-                    "HyperCoordinates": "R.A. 00h 44m 37.99s, Dec. +41° 29′ 23.6"
 
                   }
 
