@@ -5,26 +5,9 @@ order: 4
 title: Reference Set Example 3
 ---
 
-## Description
+Reference Set Example 3 is displayed below in text format.
 
-Reference Set 3 contains:
-
-- Steim2 encoding
-- 500 samples
-- FDSN extra headers:
-   - Time Quality
-   - Event Detection
-   - Time Correction
-- Non-FDSN headers:
-  - Manufacturer123
-  - OperatorXYZ
-
-## Actual Data File
-
-Access the actual Reference Set 3 data file.
-
-## Reference Set 3 in Text Format
-
+```
 Detected record length of 5469 bytes
 
 Byte swapping NOT needed for unpacking of header
@@ -334,3 +317,4 @@ Data unpacked successfully
    -175686     -198036     -213168     -220164     -218401     -207588  
 
    -187799     -159476  
+```

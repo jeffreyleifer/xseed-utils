@@ -5,19 +5,7 @@ order: 2
 title: Reference Set Example 1
 ---
 
-## Description
-
-Reference Set Example 1 contains:
-
-- Steim2 encoding
-- 500 samples
-- No extra headers
-
-## Actual Data File
-
-Access the actual Reference Set 1 data file.
-
-## Reference Set 1 in Text Format
+Reference Set Example 1 is displayed below in text format.
 
 ```
 Detected record length of 956 bytes
