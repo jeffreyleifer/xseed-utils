@@ -8,7 +8,7 @@ permalink: /documentation/
 
 ### xSeed Preamble
 
-### Background and Context
+#### Background and Context
 
 Adopted by the [International Federation of Digital Seismograph Networks](http://www.fdsn.org/) (FDSN) in 1987, the SEED format is now the canonical format for passive-source seismic, as well as other types of data. For continuous data collection, archiving, and delivery, the time series and metadata are often handled separately. The time series portion is known as miniSEED. 
 
@@ -21,7 +21,7 @@ However, changing the fundamental identifiers requires changes to key fields in 
 
 [Read the canonical xSEED specification](https://iris-edu.github.io/xseed-specification/xSEED%20-%20DRAFT%2020180511.pdf).
 
-### xSEED Benefits
+#### xSEED Benefits
 
 xSEED offers the ability to:
 
@@ -53,13 +53,16 @@ Additional benefits include:
   - Blockettes 400 (Beam) & 405 (Beam Delay)
   - Blockette 2000 (Opaque Data). 
 
-### xSEED Reference Data Set
+#### xSEED Reference Data Set
 
 The xSEED Reference Data Set is a reference data set used for developing and testing software. Intended for use by implementers, data centers, and users of the data format, the reference data set illustrates the usage of all key aspects of the data.
 
-For more information about the xSEED Reference Data Set, see the [xSEED Data Reference Set Overview](https://xseed.pages.isti.com/xseed-utils/documentation/Overview/)
+For more information about the xSEED Reference Data Set:
 
-### xSEED Utilities
+- See the [xSEED Data Reference Set Overview](https://xseed.pages.isti.com/xseed-utils/documentation/Overview/).
+- Access the actual xSEED Data Reference Set. ****Need actual link to reference set on github**
+
+#### xSEED Utilities
 
 Access documentation for the utilities that convert and verify the xSEED standard for miniSEED files: 
 
@@ -68,7 +71,7 @@ Access documentation for the utilities that convert and verify the xSEED standar
 - [xSEED to JSON](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20JSON/Introduction/)
 - [xSEED to Text](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20to%20Text/Introduction/)
 
-**_Note:_** *You may also use the sidebar navigation menu to navigate to the Reference Data Set Overview and Examples, utilities, and installation instructions.*
+**_Note:_** *You may also use the sidebar navigation menu to navigate to the xSEED Reference Data Set overview and examples, utilities, and installation instructions.*
 
 ### Overview of miniSEED
 
