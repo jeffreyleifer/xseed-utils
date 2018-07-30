@@ -5,10 +5,20 @@ order: 4
 title: xSEED to JSON
 ---
 
-## Introduction
+## Description
 
-xSEED to JSON prints the contents of a selected miniseed file in JSON format to the terminal.
+xSEED to JSON prints the contents of a selected miniseed file to the terminal in JSON format.
 
-## Usage
+## Help
+
+
+
+
+
+## Typical Usage
+
+To use the xSEED to JSON utility, execute the following command:
 
 ```./xseed2json <miniSEED input file>```
+
+## Example Usage

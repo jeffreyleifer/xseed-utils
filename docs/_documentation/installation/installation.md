@@ -5,16 +5,21 @@ order: 1
 title: Installation
 ---
 
-run ```cmake .``` on the root directory
 
 
-then ```make```
+## Instructions
 
-***Note**:* *Internet connection is required.*
+To install the utilities that convert and verify the xSEED standard for miniSEED files: 
+
+1. Run ```cmake .``` on the root directory.
+2. Run  ```make```.
+
+**_Note:_** *Internet connection is required.*
 
 ## Dependencies
 
-1. libseed v3
-2. WJElement
+The following dependencies are automatically installed via cmake:
 
-***Note:*** *These are automatically installed via cmake.*
+1. libseed v3
+2. WJElement.
+
