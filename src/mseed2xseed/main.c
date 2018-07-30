@@ -4,7 +4,7 @@
 /***************************************************************************
  * mseedconvert.c
  *
- * Convert miniSEED.  For example, miniSEED 2 to 3 or to change encoding.
+ * Convert miniSEED.  For example, miniSEED to xSEED or to change encoding.
  *
  * Written by Chad Trabant, IRIS Data Management Center
  *

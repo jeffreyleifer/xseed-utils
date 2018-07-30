@@ -18,9 +18,9 @@
 
 //CMD line option structure
 static const struct xseed_option_s args[] = {
-        {'h',    "help", "Usage", NULL, NO_OPTARG},
-        {'f',    "file", "File to validate", NULL, MANDATORY_OPTARG},
-        {'v', "verbose", "Verbosity level", NULL, OPTIONAL_OPTARG},
+        {'h',    "help h", "Usage", NULL, NO_OPTARG},
+        {'f',    "file f", "File to validate", NULL, MANDATORY_OPTARG},
+        {'v', "verbose v", "Verbosity level", NULL, OPTIONAL_OPTARG},
         {  0,         0, 0, 0, 0}};
 
 
@@ -28,16 +28,16 @@ static const struct xseed_option_s args[] = {
 //Required to be global, ms3_readmsr was having memory issues if it's a local variable
 MS3Record *msrOut = NULL;
 
-/*! @brief Prints miniSEED file contains in human readable format
+/*! @brief Prints xSEED file contains in human readable format
  *
- *  @param[in] argv[1] miniSEED file to print
+ *  @param[in] argv[1] xSEED file to print
  *  @TODO add run flags for verbosity and print payload option
  *
  */
 int main(int argc, char **argv)
 {
 
-    //vars for parsing miniSEED file and payload
+    //vars for parsing xSEED file and payload
     MS3Record *msr = NULL;
     int retcode;
     int ierr;
@@ -95,7 +95,7 @@ int main(int argc, char **argv)
     }
     if (display_usage > 0 || NULL == file_name)
     {
-        display_help(argv[0], "Program to Print a miniSEED file in human readable format", args);
+        display_help(argv[0], "Program to Print xSEED file in human readable format\n", args);
         return display_usage < 2 ? EXIT_FAILURE : EXIT_SUCCESS;
     }
 
@@ -138,9 +138,9 @@ int main(int argc, char **argv)
                 {
                     ms_log(0, "Data unpacked successfully\n");
                 }
-            } else //If older miniseed
+            } else //If older miniSEED format
             {
-                ms_log(2, "Error: Format version not version 3, read as version: %d", msr->formatversion);
+                ms_log(2, "Error: Format version not version 3, read as version: %d\n", msr->formatversion);
                 ms_log(2, "Attepting to parse as format 2");
                 ierr = msr3_unpack_mseed2(msr->record, msr->reclen, &msrOut, flags, verbose);
                 if (ierr > 0)

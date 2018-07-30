@@ -20,11 +20,11 @@
 
 //CMD line option structure
 static const struct xseed_option_s args[] = {
-    {'h',    "help", "Usage", NULL, NO_OPTARG},
-    {'f',    "file", "File to validate", NULL, MANDATORY_OPTARG},
-    {'j',  "schema", "Json Schemas", NULL, MANDATORY_OPTARG},
-    {'v', "verbose", "Verbosity level", NULL, OPTIONAL_OPTARG},
-    {'W',      NULL, "Warning flag", NULL, MANDATORY_OPTARG},
+    {'h',    "help h", "Usage", NULL, NO_OPTARG},
+    {'f',    "file f", "File to validate", NULL, MANDATORY_OPTARG},
+    {'j',  "schema j", "Json Schemas", NULL, MANDATORY_OPTARG},
+    {'v', "verbose v", "Verbosity level", NULL, OPTIONAL_OPTARG},
+    //{'W',      NULL, "Warning flag", NULL, MANDATORY_OPTARG},
     {  0,         0, 0, 0, 0}};
 
 
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     //parse command line args
     xseed_get_short_getopt_string (&short_opt_string, args);
     xseed_get_long_getopt_array(&long_opt_array, args);
-    
+
 
     //Get usage options TODO in progress
     int longindex;
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
     }
     if (display_usage > 0 || NULL == file_name)
     {
-        display_help(argv[0], "Program to Validate mini seed format", args);
+        display_help(argv[0], "Program to Validate xSEED format files", args);
         return display_usage < 2 ? EXIT_FAILURE : EXIT_SUCCESS;
     }
 
@@ -116,10 +116,10 @@ int main(int argc, char **argv)
     //TODO if extra header schema validation fails, this still registers as a success
     if(valid)
     {
-        printf("xseedValidator SUCCESS, the file %s is VALID miniSEEDv3\n\n",file_name);
+        printf("xseedValidator SUCCESS, the file %s is VALID xSEED\n\n",file_name);
     } else
     {
-        printf("xseedValidator FAILED, the file %s is NOT VALID miniSEEDv3\n\n",file_name);
+        printf("xseedValidator FAILED, the file %s is NOT VALID xSEED\n\n",file_name);
     }
 
     if (file_name)

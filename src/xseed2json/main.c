@@ -17,9 +17,9 @@
 
 //CMD line option structure
 static const struct xseed_option_s args[] = {
-        {'h',    "help", "Usage", NULL, NO_OPTARG},
-        {'f',    "file", "File to validate", NULL, MANDATORY_OPTARG},
-        {'v', "verbose", "Verbosity level", NULL, OPTIONAL_OPTARG},
+        {'h',    "help h", "Usage", NULL, NO_OPTARG},
+        {'f',    "file f", "File to validate", NULL, MANDATORY_OPTARG},
+        {'v', "verbose v", "Verbosity level", NULL, OPTIONAL_OPTARG},
         {  0,         0, 0, 0, 0}};
 
 
@@ -28,8 +28,6 @@ MS3Record *msrOut = NULL;
 
 int main(int argc, char **argv)
 {
-
-
 
     MS3Record *msr = NULL;
 
@@ -94,7 +92,7 @@ int main(int argc, char **argv)
     }
     if (display_usage > 0 || NULL == file_name)
     {
-        display_help(argv[0], "Program to Print a miniSEED file in JSON format", args);
+        display_help(argv[0], "Program to Print a xSEED file in JSON format", args);
         return display_usage < 2 ? EXIT_FAILURE : EXIT_SUCCESS;
     }
 

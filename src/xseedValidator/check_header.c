@@ -13,7 +13,7 @@
 
 /*!
 
-@brief Validates a miniSEED Version 3 Header
+@brief Validates a xSEED Version 3 Header
 
  Specification:
 A record is composed of a header followed by a time series data payload. The byte order of binary
@@ -54,7 +54,7 @@ bool parse_header_big_endian(char *buffer, bool header_valid, uint8_t *identifie
 /*! @brief main validate header routine
  *
  *  @param[in] options -W cmd line warn options (currently not implemented)
- *  @param[in] input file pointer to miniSEED file
+ *  @param[in] input file pointer to xSEED file
  *  @param[in] file_len overall binary length
  *  @param[in,out] file_pos pointer to current position in the file
  *  @param[out] identifier_len

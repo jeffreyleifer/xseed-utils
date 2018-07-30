@@ -8,7 +8,7 @@
 /*! @brief Read identifier length into buffer
  *
  *  @param[in] options -W cmd line warn options (currently not implemented)
- *  @param[in] input file pointer to miniSEED file
+ *  @param[in] input file pointer to xSEED file
  *  @param[in] identifier_len
  *
  */
