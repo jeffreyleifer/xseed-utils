@@ -55,7 +55,7 @@ Additional benefits include:
 
 #### xSEED Reference Data Set
 
-The xSEED Reference Data Set is a reference data set used for developing and testing software. To learn more about the xSEED Reference Data Set, refer to the [xSEED Data Reference Set Overview](https://xseed.pages.isti.com/xseed-utils/documentation/Overview/).
+The xSEED Reference Data Set is a reference data set used for developing and testing software. To learn more about the xSEED Reference Data Set, refer to the [xSEED Data Reference Set Overview](https://xseed.pages.isti.com/xseed-utils/documentation/xSEED%20Reference%20Set/Overview/).
 
 #### xSEED Utilities
 
