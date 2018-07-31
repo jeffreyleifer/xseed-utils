@@ -24,6 +24,14 @@ Program to Print a xSEED file in JSON format
 
 ## Typical Usage
 
-```./xseed2json -f reference-baseline-record-steim2.mseed3 -vvv ```
+```
+./xseed2json <xSEED input file>
+add -v for verbosity, add vs for more verbose
+```
 
 ## Example Usage
+
+```
+./xseed2json -f reference-baseline-record-steim2.mseed3 -vvv
+```
+

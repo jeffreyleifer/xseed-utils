@@ -5,7 +5,7 @@ order: 1
 title: Overview
 ---
 
-Intended for use by implementers, data centers, and users of the data format, the xSEED Reference Data Set illustrates the usage of all key aspects of the data. The data set includes, but is not limited to, an example of data encoded in each non‐deprecated encoding that exercises as many “states” of the encoding as possible (e.g., all encoding  states in Steim compression schemes):
+Intended for use by implementers, data centers, and users of the data format, the xSEED Reference Set illustrates the usage of all key aspects of the data. The reference set includes, but is not limited to, an example of data encoded in each non‐deprecated encoding that exercises as many “states” of the encoding as possible (e.g., all encoding  states in Steim compression schemes):
 
  - Examples covering each variation of each field as allowed by  the  specification (e.g. sample rate and sampling interval)
  - Examples including every defined (reserved) extra header
@@ -13,13 +13,9 @@ Intended for use by implementers, data centers, and users of the data format, th
  - Examples of various record lengths 128 – 4096 bytes and the maximum length
  - Examples both with and without data samples.
 
-## Actual Data Reference Set
+## xSEED Reference Set Examples
 
-Access the actual data reference set - *Jeff to provide link*
-
-## Reference Data Set Examples
-
-The table below provides the file identifier and a description for each reference data set example. Click the a file identifier link to view the example in text format.
+The table below provides the file identifier and a description for each reference set example. Click the file identifier link to view the example in text format.
 
 | Example File Identifier                                      | Example File Description                                     |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
