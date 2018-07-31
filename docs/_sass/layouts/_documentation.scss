@@ -1,5 +1,5 @@
 .doc-container {
-  color: #2FB681;
+  color: $text-color;
 
   > .doc-menu {
     display: none;
@@ -45,6 +45,7 @@
     margin-top: $documentation-margin / 2;
     margin-bottom: $documentation-margin;
 
+/* MAURA changing color for heading 1 #2FB681 */ 
     h1 {
       font-weight: $base-font-weight
       color: $brand-color;
