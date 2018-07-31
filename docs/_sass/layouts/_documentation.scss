@@ -46,7 +46,8 @@
     margin-bottom: $documentation-margin;
 
     h1 {
-      font-weight: $base-font-weight;
+      font-weight: $base-font-weight
+      color: $brand-color;
     }
 
     h2,
