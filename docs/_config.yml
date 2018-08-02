@@ -47,12 +47,9 @@ collections:
 # End
         #
 menu:
-    - title: "Home"
-      url: "/"
     - title: "Documentation"
       url: "/documentation"
-    - title: "Downloads"
-      url: "/download"
+
 
 client:
     name: IRIS
