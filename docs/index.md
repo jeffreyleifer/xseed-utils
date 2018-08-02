@@ -1,5 +1,5 @@
 ---
-layout: home
+layout: documentation
 title: xSEED-utils
 subtitle: "Utilities for a new miniSEED"
 ---
