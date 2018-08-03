@@ -47,7 +47,7 @@ collections:
 # End
         #
 menu:
-    - title: "xSEED Documentation"
+    - title: "xSEED Documentation Home"
       url: "/"
 
 
