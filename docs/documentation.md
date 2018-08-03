@@ -1,7 +1,7 @@
 ---
 layout: documentation
 title: Home
-permalink: /documentation/
+permalink: /
 ---
 
 ## Welcome to xSEED!
