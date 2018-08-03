@@ -48,7 +48,7 @@ collections:
         #
 menu:
     - title: "xSEED Documentation"
-      #url: "/documentation"
+      url: "/"
 
 
 client:
