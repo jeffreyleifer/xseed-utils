@@ -47,8 +47,8 @@ collections:
 # End
         #
 menu:
-    - title: "Documentation"
-      url: "/documentation"
+    - title: "xSEED Documentation"
+      #url: "/documentation"
 
 
 client:
