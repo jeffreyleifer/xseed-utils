@@ -3,12 +3,6 @@ layout: documentation
 title: xSEED-utils
 subtitle: "Utilities for a new miniSEED"
 ---
----
-layout: documentation
-title: Home
-permalink: /documentation/
----
-
 ## Welcome to xSEED!
 
 ### xSeed Preamble
