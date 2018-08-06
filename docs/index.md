@@ -1,6 +1,6 @@
 ---
 layout: documentation
-title: xSEED-utils
+title: xSEED-Derp
 subtitle: "Utilities for a new miniSEED"
 ---
 ## Welcome to xSEED!
